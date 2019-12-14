@@ -52,7 +52,7 @@ import static java.lang.Math.abs;
  */
 
 //the method that defines all of the variables in this program and translates the gamepad inputs to robot outputs
-@TeleOp(name="Teleop", group="Pushbot")
+@TeleOp(name="TeleopNoReset", group="Pushbot")
 public class SkystoneTeleOpWithoutReset extends LinearOpMode {
 
     /* Declare OpMode members. */
