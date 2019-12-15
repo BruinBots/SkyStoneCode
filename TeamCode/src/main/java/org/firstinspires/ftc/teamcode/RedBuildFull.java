@@ -454,7 +454,7 @@ public void moveBot(double drive, double rotate, double strafe, double scaleFact
             // Update telemetry & Allow time for other processes to run.
             //error = Range.clip(getError(angle),-0.3,0.3);
             error = PCoeff * getError(angle);
-            moveBot(speed, error, 0, 0.2);
+            moveBot(speed, error, 0, 0.3);
         }
 
         //stop all motion

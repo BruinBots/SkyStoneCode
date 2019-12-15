@@ -120,7 +120,7 @@ public class RedBlockFull extends LinearOpMode {
 
         //strafe left
 
-        gyroHoldStrafe(0,0,-1, 8);
+        gyroHoldStrafe(0,0,-1, 7);
         stopBot();
 
         //drive to platform
@@ -148,6 +148,8 @@ public class RedBlockFull extends LinearOpMode {
         moveBot(1,0,0,.2); // 1 drives backwards, -1 drives forwards
         sleep(900);
         stopBot();
+
+        robot.clawServo.setPosition(.1);
 
         //park on line
 
