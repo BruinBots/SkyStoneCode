@@ -63,6 +63,8 @@ public class RedBlockFull extends LinearOpMode {
         double fwdSpeed=0.3;  // Forward Speed, Normally 0.1
         double rotate = 0.2; // Rotation Speed
         double strafe = 0.5;  // Strafe Speed
+        int currentArmExtendOut = -250;
+        int currentArmExtendIn = -50;
 
 
         //put them into a known position
@@ -75,13 +77,14 @@ public class RedBlockFull extends LinearOpMode {
         robot.armLiftMotor.setTargetPosition(200);
         robot.armLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.armLiftMotor.setPower(1);
-        sleep(500);
+        sleep(1000);
 
         //extend arm
 
-        robot.armExtendMotor.setPower(-.5);
-        sleep(2000);
-        robot.armExtendMotor.setPower(0);
+        robot.armExtendMotor.setTargetPosition(-250);
+        robot.armExtendMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.armExtendMotor.setPower(.9);  //small spool: power 1, big spool: power .9
+        sleep(1000);
 
         //lower arm
 
@@ -102,7 +105,7 @@ public class RedBlockFull extends LinearOpMode {
 
         //lift arm
 
-        robot.armLiftMotor.setTargetPosition(300);
+        robot.armLiftMotor.setTargetPosition(370);
         robot.armLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.armLiftMotor.setPower(1);
 
@@ -112,9 +115,9 @@ public class RedBlockFull extends LinearOpMode {
         sleep(500);
         stopBot();
 
-        robot.armExtendMotor.setPower(.5);
-        sleep(1500);
-        robot.armExtendMotor.setPower(0);
+        robot.armExtendMotor.setTargetPosition(-250);
+        robot.armExtendMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.armExtendMotor.setPower(.9);  //small spool: power 1, big spool: power .9
 
 
 

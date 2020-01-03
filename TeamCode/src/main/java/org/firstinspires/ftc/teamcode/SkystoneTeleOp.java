@@ -34,6 +34,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.PIDCoefficients;
+import com.qualcomm.robotcore.hardware.DcMotorControllerEx;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import static java.lang.Math.abs;
 
@@ -70,6 +73,10 @@ public class SkystoneTeleOp extends LinearOpMode {
 //        double turn;
 //        double max;
 
+
+
+
+
         float drive = 0;
         float strafe = 0;
         float rotate = 0;
@@ -97,6 +104,9 @@ public class SkystoneTeleOp extends LinearOpMode {
         boolean platformServoUp = false;
         int currentArmLiftPosition =0;  // Used to store the currently commanded arm position
         int MAX_LIFTARM_POSITION = 600;  // ABout 70 steps from arm starting position to full extension
+        int currentArmExtendPosition = 0;
+        int MAX_ARMEXTEND_POSITION = 0;
+        int MIN_ARMEXTEND_POSITION = -250;  //min encoder value is actually -288
 
 
 
@@ -113,8 +123,16 @@ public class SkystoneTeleOp extends LinearOpMode {
          */
         robot.init(hardwareMap);
 
-//        reset the encoder
+//        reset the encoders
+        // reset the armLiftMotor encoder
         robot.armLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //reset the armExtendMotor encoder
+        robot.armExtendMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        // Get PID constants
+        int motorIndex = ((robot.armLiftMotor).getPortNumber());
+        DcMotorControllerEx motorControllerEx = (DcMotorControllerEx)robot.armLiftMotor.getController();
+        PIDCoefficients pidModified = motorControllerEx.getPIDCoefficients(motorIndex, DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello Driver");    //
@@ -168,27 +186,62 @@ public class SkystoneTeleOp extends LinearOpMode {
 
 
 
-
                 //arm extension section
                 //Dpad left moves it out and right moves it in
-                armOut = gamepad2.dpad_left;
-                armIn = gamepad2.dpad_right;
-                if (armIn) {
-                    robot.armExtendMotor.setPower(1);
-                    telemetry.addData("armExtend Position", robot.armExtendMotor.getCurrentPosition());
-                }
-                else {
-                    robot.armExtendMotor.setPower(0);
+
+                //arm lifting section
+                //Dpad up moves it up and down moves it down
+                //negative is forward
+                armOut = gamepad2.dpad_right;
+                armIn = gamepad2.dpad_left;
+                // Only change value if arm is near commanded value, prevents overdriving arm.  8 seems to work...
+                if (abs(currentArmExtendPosition-robot.armExtendMotor.getCurrentPosition()) < 6){
+                    if (armIn) {
+                        currentArmExtendPosition += 50; // Add 10 to the current arm position
+                        if (currentArmExtendPosition > MAX_ARMEXTEND_POSITION) {
+                            currentArmExtendPosition = MAX_ARMEXTEND_POSITION; // DOn't let it go highter than Max Position
+                        }
+                    } else {
+                        if (armOut) {
+                            currentArmExtendPosition -= 50; // Subtract 10 from the current arm position
+                            if (currentArmExtendPosition < MIN_ARMEXTEND_POSITION) {
+                                currentArmExtendPosition = MIN_ARMEXTEND_POSITION;  // Don't let it go lower than 0
+                            }
+                        }
+                    }
                 }
 
-                if (armOut) {
-                    robot.armExtendMotor.setPower(-1);
-                    telemetry.addData("armExtend Position", robot.armExtendMotor.getCurrentPosition());
-                }
-                else {
-                    robot.armExtendMotor.setPower(0);
-                }
+                telemetry.addData("Current Commanded Pos (for ArmExtend): ",currentArmExtendPosition);
+                telemetry.addData("Actual Pos (for ArmExtend): ",robot.armExtendMotor.getCurrentPosition());
+                robot.armExtendMotor.setTargetPosition(currentArmExtendPosition);
+                robot.armExtendMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                robot.armExtendMotor.setPower(.9);  //small spool: power 1, big spool: power .5
+
                 telemetry.update();
+
+
+
+
+//                armOut = gamepad2.dpad_left;
+//                armIn = gamepad2.dpad_right;
+//                if (armIn) {
+//                    robot.armExtendMotor.setPower(.5);
+//                    telemetry.addData("armExtend Position", robot.armExtendMotor.getCurrentPosition());
+//                }
+//                else {
+//                    robot.armExtendMotor.setPower(0);
+//                }
+//
+//                if (armOut) {
+//                    robot.armExtendMotor.setPower(-.5);
+//                    telemetry.addData("armExtend Position", robot.armExtendMotor.getCurrentPosition());
+//                }
+//                else {
+//                    robot.armExtendMotor.setPower(0);
+//                }
+//                telemetry.update();
+
+
 
                 //arm lifting section
                 //Dpad up moves it up and down moves it down
@@ -216,6 +269,11 @@ public class SkystoneTeleOp extends LinearOpMode {
                 robot.armLiftMotor.setTargetPosition(currentArmLiftPosition);
                 robot.armLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 robot.armLiftMotor.setPower(1);
+
+                //PID value telemetry
+                telemetry.addData("P,I,D (modified)", "%.04f, %.04f, %.04f",
+                        pidModified.p, pidModified.i, pidModified.d);
+
                 telemetry.update();
                 /*
                 if (armUp) {
