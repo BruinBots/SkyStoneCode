@@ -19,7 +19,6 @@ public class RedBlockWaitPark extends LinearOpMode {
     HardwareBruinBot robot = new HardwareBruinBot();
 
 
-
     private ElapsedTime runtime = new ElapsedTime();
     //public boolean found() { return GoldAlignExample.isFound(); }
     //public boolean isAligned() { return detector.getAligned(); }
@@ -70,28 +69,28 @@ public class RedBlockWaitPark extends LinearOpMode {
         robot.leftPlatformServo.setPosition(.1);
 
 
-//        //lift arm a little bit
-//
+        //lift arm a little bit
+
 //        robot.armLiftMotor.setTargetPosition(200);
 //        robot.armLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //        robot.armLiftMotor.setPower(1);
 //        sleep(500);
-//
-//        //extend arm
-//
+
+        //extend arm
+
 //        robot.armExtendMotor.setPower(-.5);
 //        sleep(2000);
 //        robot.armExtendMotor.setPower(0);
-//
-//        //lower arm
-//
+
+        //lower arm
+
 //        robot.armLiftMotor.setTargetPosition(-30);
 //        robot.armLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //        robot.armLiftMotor.setPower(1);
 //        sleep(2000);
-//
-//        //move forward
-//
+
+        //move forward
+
 //        moveBot(-1,0,0,.2);
 //        sleep(2200);
 //        stopBot();
@@ -109,7 +108,7 @@ public class RedBlockWaitPark extends LinearOpMode {
 //        //back up
 //
 //        moveBot(1,0,0,.2);
-//        sleep(500);
+//        sleep(100);
 //        stopBot();
 //
 //        robot.armExtendMotor.setPower(.5);
@@ -120,7 +119,7 @@ public class RedBlockWaitPark extends LinearOpMode {
 //
 //        //strafe left
 //
-//        gyroHoldStrafe(0,0,-1, 7);
+//        gyroHoldStrafe(0,0,1,6);
 //        stopBot();
 //
 //        //drive to platform
@@ -139,26 +138,52 @@ public class RedBlockWaitPark extends LinearOpMode {
 //        robot.armLiftMotor.setTargetPosition(300);
 //        robot.armLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //        robot.armLiftMotor.setPower(1);
-
-
-//        robot.armExtendMotor.setPower(.5);
-//        sleep(1500);
-//        robot.armExtendMotor.setPower(0);
-
-//        park on line
+//
+//
+////        robot.armExtendMotor.setPower(.5);
+////        sleep(1500);
+////        robot.armExtendMotor.setPower(0);
+//
+//        moveBot(1,0,0,.2); // 1 drives backwards, -1 drives forwards
+//        sleep(900);
+//        stopBot();
+//
+//        robot.clawServo.setPosition(.1);
+//
+//        //park on line
 
 //        sleep for 20 seconds
-        sleep(20000);
 
+
+        ElapsedTime holdTimer = new ElapsedTime();
+        // keep looping while we have time remaining.
+        holdTimer.reset();
+        while ((!isStopRequested() && holdTimer.time() < 20)) {
+            // Update telemetry & Allow time for other processes to run.
+            //error = Range.clip(getError(angle),-0.3,0.3);
+            sleep(1000);
+        }
+        stopBot();
+
+
+//move forward to not touch wall
         moveBot(-1,0,0,.2); // 1 drives backwards, -1 drives forwards
         sleep(200);
         stopBot();
 
-        robot.clawServo.setPosition(.1);
-
-
+//        strafe left to park on line
         gyroHoldStrafe(0,0,-1,3.5);  // strafe -1 drives right, 1 drives left
         stopBot();
+
+
+//        robot.armLiftMotor.setTargetPosition(-30);
+//        robot.armLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        robot.armLiftMotor.setPower(1);
+//
+//
+//        robot.armExtendMotor.setPower(.5);
+//        sleep(250);
+//        robot.armExtendMotor.setPower(0);
 
 
         //hoping to move the robot 2 seconds forwards
@@ -570,14 +595,10 @@ public void moveBot(double drive, double rotate, double strafe, double scaleFact
             moveBot(speed, error, strafe, 0.3);
         }
 
-        ElapsedTime holdTimer = new ElapsedTime();
-        // keep looping while we have time remaining.
-        holdTimer.reset();
-        while ((!isStopRequested() && holdTimer.time() < holdTime)) {
-            // Update telemetry & Allow time for other processes to run.
-            //error = Range.clip(getError(angle),-0.3,0.3);
-          sleep(20000);
-        }
+
+
+
+
         //stop all motion
         stopBot();
     }
