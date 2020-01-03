@@ -153,8 +153,17 @@ public class BlueBlockWaitPark extends LinearOpMode {
 //        //park on line
 
 //        sleep for 20 seconds
-        sleep(20000);
 
+
+        ElapsedTime holdTimer = new ElapsedTime();
+        // keep looping while we have time remaining.
+        holdTimer.reset();
+        while ((!isStopRequested() && holdTimer.time() < 20)) {
+            // Update telemetry & Allow time for other processes to run.
+            //error = Range.clip(getError(angle),-0.3,0.3);
+            sleep(1000);
+        }
+        stopBot();
 
 
 //move forward to not touch wall
@@ -586,14 +595,7 @@ public void moveBot(double drive, double rotate, double strafe, double scaleFact
             moveBot(speed, error, strafe, 0.3);
         }
 
-//        ElapsedTime holdTimer = new ElapsedTime();
-        // keep looping while we have time remaining.
-        holdTimer.reset();
-        while ((!isStopRequested() && holdTimer.time() < holdTime)) {
-            // Update telemetry & Allow time for other processes to run.
-            //error = Range.clip(getError(angle),-0.3,0.3);
-            sleep(20000);
-        }
+
 
 
 
