@@ -12,9 +12,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-@Autonomous(name = "RedBlockWaitPark", group = "Alex")
+@Autonomous(name = "RedBuildWaitPark", group = "Alex")
 
-public class RedBlockWaitPark extends LinearOpMode {
+public class RedBuildWaitPark extends LinearOpMode {
 
     HardwareBruinBot robot = new HardwareBruinBot();
 
@@ -166,13 +166,13 @@ public class RedBlockWaitPark extends LinearOpMode {
         stopBot();
 
 
-//move forward to not touch wall
+        //move forward to not touch wall
         moveBot(-1,0,0,.2); // 1 drives backwards, -1 drives forwards
         sleep(200);
         stopBot();
 
 //        strafe left to park on line
-        gyroHoldStrafe(0,0,1,3.5);  // strafe -1 drives right, 1 drives left
+        gyroHoldStrafe(0,0,-1,3.5);  // strafe -1 drives right, 1 drives left
         stopBot();
 
 

@@ -172,7 +172,7 @@ public class BlueBlockWaitPark extends LinearOpMode {
         stopBot();
 
 //        strafe left to park on line
-        gyroHoldStrafe(0,0,1,3.5);  // strafe -1 drives right, 1 drives left
+        gyroHoldStrafe(0,0,-1,3.5);  // strafe -1 drives right, 1 drives left
         stopBot();
 
 
