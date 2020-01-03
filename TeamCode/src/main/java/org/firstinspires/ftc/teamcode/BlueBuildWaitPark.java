@@ -129,7 +129,7 @@ public class BlueBuildWaitPark extends LinearOpMode {
         stopBot();
 
 //        strafe to park on line
-        gyroHoldStrafe(0, 0, -1, 3.5);
+        gyroHoldStrafe(0, 0, 1, 3.5);
         stopBot();
 
         //hoping to move the robot 2 seconds forwards
