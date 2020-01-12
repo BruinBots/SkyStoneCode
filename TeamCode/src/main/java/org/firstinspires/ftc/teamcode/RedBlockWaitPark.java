@@ -12,12 +12,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-@Autonomous(name = "RedBlockFull", group = "Jack")
+@Autonomous(name = "RedBlockWaitPark", group = "Alex")
 
-public class RedBlockFull extends LinearOpMode {
+public class RedBlockWaitPark extends LinearOpMode {
 
     HardwareBruinBot robot = new HardwareBruinBot();
-
 
 
     private ElapsedTime runtime = new ElapsedTime();
@@ -63,8 +62,6 @@ public class RedBlockFull extends LinearOpMode {
         double fwdSpeed=0.3;  // Forward Speed, Normally 0.1
         double rotate = 0.2; // Rotation Speed
         double strafe = 0.5;  // Strafe Speed
-        int currentArmExtendOut = -250;
-        int currentArmExtendIn = -50;
 
 
         //put them into a known position
@@ -74,90 +71,121 @@ public class RedBlockFull extends LinearOpMode {
 
         //lift arm a little bit
 
-        robot.armLiftMotor.setTargetPosition(200);
-        robot.armLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.armLiftMotor.setPower(1);
-        sleep(1000);
+//        robot.armLiftMotor.setTargetPosition(200);
+//        robot.armLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        robot.armLiftMotor.setPower(1);
+//        sleep(500);
 
         //extend arm
 
-        robot.armExtendMotor.setTargetPosition(currentArmExtendOut);
-        robot.armExtendMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.armExtendMotor.setPower(.9);  //small spool: power 1, big spool: power .9
-        sleep(1000);
+//        robot.armExtendMotor.setPower(-.5);
+//        sleep(2000);
+//        robot.armExtendMotor.setPower(0);
 
         //lower arm
 
-        robot.armLiftMotor.setTargetPosition(-30);
-        robot.armLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.armLiftMotor.setPower(1);
-        sleep(2000);
+//        robot.armLiftMotor.setTargetPosition(-30);
+//        robot.armLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        robot.armLiftMotor.setPower(1);
+//        sleep(2000);
 
         //move forward
 
-        moveBot(-1,0,0,.2);
-        sleep(1700);
-        stopBot();
-
-        //grab block
-        robot.clawServo.setPosition(.1);
-        sleep(750);
-
-        //lift arm
-
-        robot.armLiftMotor.setTargetPosition(370);
-        robot.armLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.armLiftMotor.setPower(1);
-
-        //back up
-
-        moveBot(1,0,0,.2);
-        sleep(500);
-        stopBot();
-
-        robot.armExtendMotor.setTargetPosition(currentArmExtendIn);
-        robot.armExtendMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.armExtendMotor.setPower(.9);  //small spool: power 1, big spool: power .9
-
-
-
-        //strafe left
-
-        gyroHoldStrafe(0,0,-1, 8);
-        stopBot();
-
-        //drive to platform
-
-        while (robot.frontTouchSensor.getState()) {
-            moveBot(-1, 0, 0, .2); // 1 drives backwards, -1 drives forward
-        }
-        stopBot();
-
-        //drop block
-
-        robot.clawServo.setPosition(1);
-        //we might want to grab the platform to drag it back if the other team is a brick
-
-
-        robot.armLiftMotor.setTargetPosition(300);
-        robot.armLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.armLiftMotor.setPower(1);
-
-
+//        moveBot(-1,0,0,.2);
+//        sleep(2200);
+//        stopBot();
+//
+//        //grab block
+//        robot.clawServo.setPosition(.1);
+//        sleep(750);
+//
+//        //lift arm
+//
+//        robot.armLiftMotor.setTargetPosition(300);
+//        robot.armLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        robot.armLiftMotor.setPower(1);
+//
+//        //back up
+//
+//        moveBot(1,0,0,.2);
+//        sleep(100);
+//        stopBot();
+//
 //        robot.armExtendMotor.setPower(.5);
 //        sleep(1500);
 //        robot.armExtendMotor.setPower(0);
+//
+//
+//
+//        //strafe left
+//
+//        gyroHoldStrafe(0,0,1,6);
+//        stopBot();
+//
+//        //drive to platform
+//
+//        while (robot.frontTouchSensor.getState()) {
+//            moveBot(-1, 0, 0, .2); // 1 drives backwards, -1 drives forward
+//        }
+//        stopBot();
+//
+//        //drop block
+//
+//        robot.clawServo.setPosition(1);
+//        //we might want to grab the platform to drag it back if the other team is a brick
+//
+//
+//        robot.armLiftMotor.setTargetPosition(300);
+//        robot.armLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        robot.armLiftMotor.setPower(1);
+//
+//
+////        robot.armExtendMotor.setPower(.5);
+////        sleep(1500);
+////        robot.armExtendMotor.setPower(0);
+//
+//        moveBot(1,0,0,.2); // 1 drives backwards, -1 drives forwards
+//        sleep(900);
+//        stopBot();
+//
+//        robot.clawServo.setPosition(.1);
+//
+//        //park on line
 
-        moveBot(1,0,0,.2); // 1 drives backwards, -1 drives forwards
-        sleep(900);
+//        sleep for 20 seconds
+
+
+        ElapsedTime holdTimer = new ElapsedTime();
+        // keep looping while we have time remaining.
+        holdTimer.reset();
+        while ((!isStopRequested() && holdTimer.time() < 20)) {
+            // Update telemetry & Allow time for other processes to run.
+            //error = Range.clip(getError(angle),-0.3,0.3);
+            sleep(1000);
+        }
         stopBot();
 
         robot.clawServo.setPosition(.1);
 
-        //park on line
 
-        gyroHoldStrafe(0,0,1,4.5);  // strafe -1 drives right, 1 drives left
+//move forward to not touch wall
+        moveBot(-1,0,0,.2); // 1 drives backwards, -1 drives forwards
+        sleep(200);
         stopBot();
+
+//        strafe left to park on line
+        gyroHoldStrafe(0,0,-1,3.5);  // strafe -1 drives right, 1 drives left
+        stopBot();
+
+
+//        robot.armLiftMotor.setTargetPosition(-30);
+//        robot.armLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        robot.armLiftMotor.setPower(1);
+//
+//
+//        robot.armExtendMotor.setPower(.5);
+//        sleep(250);
+//        robot.armExtendMotor.setPower(0);
 
 
         //hoping to move the robot 2 seconds forwards
@@ -568,6 +596,10 @@ public void moveBot(double drive, double rotate, double strafe, double scaleFact
             error = PCoeff * getError(angle);
             moveBot(speed, error, strafe, 0.3);
         }
+
+
+
+
 
         //stop all motion
         stopBot();

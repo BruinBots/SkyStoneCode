@@ -103,7 +103,7 @@ public class SkystoneTeleOp extends LinearOpMode {
         boolean platformServoDown = false;
         boolean platformServoUp = false;
         int currentArmLiftPosition =0;  // Used to store the currently commanded arm position
-        int MAX_LIFTARM_POSITION = 600;  // ABout 70 steps from arm starting position to full extension
+        int MAX_LIFTARM_POSITION = 460;  // ABout 70 steps from arm starting position to full extension
         int currentArmExtendPosition = 0;
         int MAX_ARMEXTEND_POSITION = 0;
         int MIN_ARMEXTEND_POSITION = -250;  //min encoder value is actually -288
@@ -133,6 +133,12 @@ public class SkystoneTeleOp extends LinearOpMode {
         int motorIndex = ((robot.armLiftMotor).getPortNumber());
         DcMotorControllerEx motorControllerEx = (DcMotorControllerEx)robot.armLiftMotor.getController();
         PIDCoefficients pidModified = motorControllerEx.getPIDCoefficients(motorIndex, DcMotor.RunMode.RUN_USING_ENCODER);
+
+
+        // change coefficients using methods included with DcMotorEx class.
+        PIDCoefficients pidNew = new PIDCoefficients(4, 2, 3);
+        motorControllerEx.setPIDCoefficients(motorIndex, DcMotor.RunMode.RUN_USING_ENCODER, pidNew);
+
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello Driver");    //
@@ -250,15 +256,15 @@ public class SkystoneTeleOp extends LinearOpMode {
                 // Only change value if arm is near commanded value, prevents overdriving arm.  8 seems to work...
                 if (abs(currentArmLiftPosition-robot.armLiftMotor.getCurrentPosition()) < 8){
                     if (armUp) {
-                        currentArmLiftPosition += 20; // Add 10 to the current arm position
+                        currentArmLiftPosition += 150; // Add 10 to the current arm position
                         if (currentArmLiftPosition > MAX_LIFTARM_POSITION) {
                             currentArmLiftPosition = MAX_LIFTARM_POSITION; // DOn't let it go highter than Max Position
                         }
                     } else {
                         if (armDown) {
-                            currentArmLiftPosition -= 15; // Subtract 10 from the current arm position
-                            if (currentArmLiftPosition < -30) {
-                                currentArmLiftPosition = -30;  // Don't let it go lower than 0
+                            currentArmLiftPosition -= 100; // Subtract 10 from the current arm position
+                            if (currentArmLiftPosition < -20) {
+                                currentArmLiftPosition = -20;  // Don't let it go lower than 0
                             }
                         }
                     }

@@ -12,12 +12,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-@Autonomous(name = "RedBlockFull", group = "Jack")
+@Autonomous(name = "BlueBlockNoTouch", group = "Jack")
 
-public class RedBlockFull extends LinearOpMode {
+public class BlueBlockNoTouch extends LinearOpMode {
 
     HardwareBruinBot robot = new HardwareBruinBot();
-
 
 
     private ElapsedTime runtime = new ElapsedTime();
@@ -66,7 +65,6 @@ public class RedBlockFull extends LinearOpMode {
         int currentArmExtendOut = -250;
         int currentArmExtendIn = -50;
 
-
         //put them into a known position
         robot.rightPlatformServo.setPosition(.1);
         robot.leftPlatformServo.setPosition(.1);
@@ -108,11 +106,12 @@ public class RedBlockFull extends LinearOpMode {
         robot.armLiftMotor.setTargetPosition(370);
         robot.armLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.armLiftMotor.setPower(1);
+        sleep(1000);
 
         //back up
 
         moveBot(1,0,0,.2);
-        sleep(500);
+        sleep(100);
         stopBot();
 
         robot.armExtendMotor.setTargetPosition(currentArmExtendIn);
@@ -123,15 +122,11 @@ public class RedBlockFull extends LinearOpMode {
 
         //strafe left
 
-        gyroHoldStrafe(0,0,-1, 8);
+        gyroHoldStrafe(0,0,1,8);
         stopBot();
 
         //drive to platform
 
-        while (robot.frontTouchSensor.getState()) {
-            moveBot(-1, 0, 0, .2); // 1 drives backwards, -1 drives forward
-        }
-        stopBot();
 
         //drop block
 
@@ -148,16 +143,24 @@ public class RedBlockFull extends LinearOpMode {
 //        sleep(1500);
 //        robot.armExtendMotor.setPower(0);
 
-        moveBot(1,0,0,.2); // 1 drives backwards, -1 drives forwards
-        sleep(900);
-        stopBot();
+
 
         robot.clawServo.setPosition(.1);
 
         //park on line
 
-        gyroHoldStrafe(0,0,1,4.5);  // strafe -1 drives right, 1 drives left
+        gyroHoldStrafe(0,0,-1,4.5);  // strafe -1 drives right, 1 drives left
         stopBot();
+
+
+//        robot.armLiftMotor.setTargetPosition(-30);
+//        robot.armLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        robot.armLiftMotor.setPower(1);
+//
+//
+//        robot.armExtendMotor.setPower(.5);
+//        sleep(250);
+//        robot.armExtendMotor.setPower(0);
 
 
         //hoping to move the robot 2 seconds forwards

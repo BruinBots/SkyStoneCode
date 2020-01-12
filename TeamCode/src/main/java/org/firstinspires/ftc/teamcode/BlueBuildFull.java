@@ -75,7 +75,7 @@ public class BlueBuildFull extends LinearOpMode {
         stopBot();
 
 //        strafe left until 17 inches of wall.
-        while (rangeSensor()>=17) {
+        while (rangeSensor()>=16) {
             //find gyrostrafe
             moveBot(0,0,1,.2);
         }
@@ -103,13 +103,17 @@ public class BlueBuildFull extends LinearOpMode {
         robot.leftPlatformServo.setPosition(0);
         sleep(2000);
 
+
+        //        close claw
+        robot.clawServo.setPosition(.1);
+
 //        moveBot(-1,0,0, .2);
 //        sleep(500);
 //        stopBot();
 
 //        Strafe
 //        gyroStrafe(-.5,0);
-        gyroHoldStrafe(0, 0, -1, 4);
+        gyroHoldStrafe(.01, 0, -1, 4);
         stopBot();
 
         //hoping to move the robot 2 seconds forwards

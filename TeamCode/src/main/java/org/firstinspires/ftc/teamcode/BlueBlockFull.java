@@ -94,7 +94,7 @@ public class BlueBlockFull extends LinearOpMode {
         //move forward
 
         moveBot(-1,0,0,.2);
-        sleep(2200);
+        sleep(1700);
         stopBot();
 
         //grab block
@@ -122,7 +122,7 @@ public class BlueBlockFull extends LinearOpMode {
 
         //strafe left
 
-        gyroHoldStrafe(0,0,1,6);
+        gyroHoldStrafe(0,0,1,8);
         stopBot();
 
         //drive to platform
@@ -155,7 +155,7 @@ public class BlueBlockFull extends LinearOpMode {
 
         //park on line
 
-        gyroHoldStrafe(0,0,-1,3.5);  // strafe -1 drives right, 1 drives left
+        gyroHoldStrafe(0,0,-1,4.5);  // strafe -1 drives right, 1 drives left
         stopBot();
 
 

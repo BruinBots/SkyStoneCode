@@ -68,9 +68,53 @@ public class RobotPark extends LinearOpMode {
 
 
     public void RobotPark(double UsedSensor, double Direction) {
-        while (!isStopRequested() && UsedSensor <= 5) {
 
+
+        ElapsedTime holdTimer = new ElapsedTime();
+//        CrashDistance = 5
+        int CrashDistance = 5;
+//        TimeToLine = 4
+        int TimeToLine = 4;
+        double TimerPause;
+
+//        Start the timer T
+        holdTimer.reset();
+
+//        While (rangesensor < CrashDistance && T < TimeToLine) {
+        while (UsedSensor < CrashDistance && holdTimer.time() < TimeToLine) {
+//            strafe
+            gyroStrafe(1,Direction);
+//        }
         }
+//        stopBot
+        stopBot();
+//        Pause timer
+        TimerPause = holdTimer.seconds();
+//        If (rangeSensor < CrashDistance) {
+        if (UsedSensor < CrashDistance) {
+//            While (rangesensor < CrashDistance) {
+            while (UsedSensor < CrashDistance) {
+//                Move forward
+                gyroStrafe(1,Direction);
+//            }
+            }
+//            stopbot
+//            Unpause timer
+            holdTimer.reset();
+//            holdTimer.seconds() = TimerPause;
+//            While (T < TimeToLine) {
+            while (holdTimer.time() < (TimeToLine - TimerPause)) {
+//                Strafe
+                gyroStrafe(1,Direction);
+//            }
+        }
+//            stopbot
+            stopBot();
+//        }
+        }
+
+
+
     }
 
 
@@ -174,13 +218,13 @@ public void moveBot(double drive, double rotate, double strafe, double scaleFact
         error = getError(heading);
         if (error < 0 && Math.abs(error) > deadband) {
             // Nagative error greater than 5 degrees, left of desired heading, input positive rotation
-            moveBot(0, -.25, speed, 0.6);
+            moveBot(0, -.25, speed, 0.3);
         } else if (error > 0 && Math.abs(error) > deadband) {
             // Positive Error greater than 5 degrees, right of desired heading, input negative rotation
-            moveBot(0, 0.25, speed, 0.6);
+            moveBot(0, 0.25, speed, 0.3);
         } else {
             // Robot is on course
-            moveBot(0, 0, speed, 0.6);
+            moveBot(0, 0, speed, 0.3);
         }
     }
 
