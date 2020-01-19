@@ -150,7 +150,7 @@ public class BlueBlockStonePaltform extends LinearOpMode {
         robot.rightPlatformServo.setPosition(0);
         robot.leftPlatformServo.setPosition(0);
         sleep(2000);
-        
+
 
         robot.armLiftMotor.setTargetPosition(300);
         robot.armLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
