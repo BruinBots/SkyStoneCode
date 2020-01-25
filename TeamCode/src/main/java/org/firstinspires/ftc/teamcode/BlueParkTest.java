@@ -375,12 +375,14 @@ public class BlueParkTest extends LinearOpMode {
 
     //RobotPark here
 
-    public void RobotPark(double UsedSensor, double Direction) {
+    public void RobotPark( double Direction) {
 
 
         ElapsedTime holdTimer = new ElapsedTime();
 //        CrashDistance = 5
         int CrashDistance = 5;
+        double UsedSensor = 0;
+        double SensorDistance = 0;
         int left = 1;
         int right = 0;
 //        TimeToLine = 4
@@ -390,22 +392,55 @@ public class BlueParkTest extends LinearOpMode {
 //        Start the timer T
         holdTimer.reset();
 
-//        While (rangesensor < CrashDistance && T < TimeToLine) {
-        while (UsedSensor < CrashDistance && holdTimer.time() < TimeToLine) {
+        if (Direction == left) {
+            //        While (rangesensor < CrashDistance && T < TimeToLine) {
+            while (sonarDistance() < CrashDistance && holdTimer.time() < TimeToLine) {
 //            strafe
-            gyroStrafe(1,Direction);
+                gyroStrafe(1,-1);
+                UsedSensor = 0;
 //        }
+            }
         }
+        else if (Direction == right) {
+            //        While (rangesensor < CrashDistance && T < TimeToLine) {
+            while (rangeSensor() < CrashDistance && holdTimer.time() < TimeToLine) {
+//            strafe
+                gyroStrafe(1,1);
+                UsedSensor = 1;
+//        }
+            }
+        }
+
+
 //        stopBot
         stopBot();
+
+        if (Direction == left) {
+            SensorDistance = sonarDistance();
+            telemetry.addData("Direction:", "left");
+        }
+        else if (Direction == right) {
+            SensorDistance = rangeSensor();
+            telemetry.addData("Direction:", "right");
+        }
+        telemetry.update();
+
 //        Pause timer
         TimerPause = holdTimer.seconds();
 //        If (rangeSensor < CrashDistance) {
-        if (UsedSensor < CrashDistance) {
+        if (SensorDistance < CrashDistance) {
 //            While (rangesensor < CrashDistance) {
-            while (UsedSensor < CrashDistance) {
+            while (SensorDistance < CrashDistance) {
 //                Move forward
                 gyroStrafe(1,Direction);
+                //Updates the sensorDistance
+                if (Direction == left) {
+                    SensorDistance = rangeSensor();
+                }
+                else if (Direction == right) {
+                    SensorDistance = sonarDistance();
+                }
+
 //            }
             }
 //            stopbot
@@ -566,6 +601,10 @@ public class BlueParkTest extends LinearOpMode {
         return heading;
 
     }
+
+
+
+
 
 
     /**

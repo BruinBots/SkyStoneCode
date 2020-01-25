@@ -4,12 +4,15 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+
+import static java.lang.Math.abs;
 
 @Autonomous(name = "RedBuildFull", group = "Jack")
 
@@ -54,6 +57,7 @@ public class RedBuildFull extends LinearOpMode {
 
         //reset the encoder
         robot.armLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.tapeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         // Wait for the Start button to be pushed
         while (!isStarted()) {
             // Put things to do prior to start in here
@@ -63,12 +67,14 @@ public class RedBuildFull extends LinearOpMode {
         double strafe = 0.5;  // Strafe Speed
 
 
+
+
         //put them into a known position
         robot.rightPlatformServo.setPosition(.1);
         robot.leftPlatformServo.setPosition(.1);
 
 
-        sleep(10000);
+        sleep(7000);
 
 
         moveBot(-1,0,0,.2);
@@ -113,8 +119,27 @@ public class RedBuildFull extends LinearOpMode {
 
 //        Strafe
 //        gyroStrafe(-.5,0);
-        gyroHoldStrafe(.01 , 0, 1, 4);
+        gyroHoldStrafe(.01 , 0, 1, 2);
         stopBot();
+
+
+        moveBot(-1,0,0,.2);
+        sleep(400);
+        stopBot();
+
+
+        gyroSpin(-90);
+        stopBot();
+
+
+        robot.tapeMotor.setTargetPosition(-1400);
+        robot.tapeMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.tapeMotor.setPower(1);
+        sleep(5000);
+        stopBot();
+
+
+
 
         //hoping to move the robot 2 seconds forwards
 //        moveBot(1, 0, 0, 0.2);
@@ -230,7 +255,7 @@ public class RedBuildFull extends LinearOpMode {
             hwMap.rightFrontDrive.setPower(0.1); //= drive - strafe - rotate;
             hwMap.rightRearDrive.setPower(0.1); //= drive + strafe - rotate;
         sleep(1000);*/
-//           stopBot();
+//          stopBot();
 //           detector.disable();
         //hwMap.leftFrontDrive.setPower(0);
         //hwMap.leftRearDrive.setPower(0);
@@ -433,6 +458,36 @@ public void moveBot(double drive, double rotate, double strafe, double scaleFact
         }
 
 
+        public void tapeMeasureMove(int currentTapeMeasurePosition, boolean tapeIn, boolean tapeOut) {
+
+        //forward is negative and backwards is positive
+            int MAX_TAPEMEASURE_POSITION = 0;
+            int MIN_TAPEMEASURE_POSITION = -1600;
+
+            // Only change value if arm is near commanded value, prevents overdriving arm.  8 seems to work...
+            if (abs(currentTapeMeasurePosition-robot.tapeMotor.getCurrentPosition()) < 8){
+                if (tapeOut) {
+                    currentTapeMeasurePosition += 200; // Add 10 to the current arm position
+                    if (currentTapeMeasurePosition > MAX_TAPEMEASURE_POSITION) {
+                        currentTapeMeasurePosition = MAX_TAPEMEASURE_POSITION; // DOn't let it go highter than Max Position
+                    }
+                } else {
+                    if (tapeIn) {
+                        currentTapeMeasurePosition -= 200; // Subtract 10 from the current arm position
+                        if (currentTapeMeasurePosition < MIN_TAPEMEASURE_POSITION) {
+                            currentTapeMeasurePosition = MIN_TAPEMEASURE_POSITION;  // Don't let it go lower than 0
+                        }
+                    }
+                }
+            }
+
+
+            robot.tapeMotor.setTargetPosition(currentTapeMeasurePosition);
+            robot.tapeMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.tapeMotor.setPower(.1);
+        }
+
+
     /**
      *  Method to obtain & hold a heading for a finite amount of time
      *  Move will stop once the requested time has elapsed
@@ -450,8 +505,8 @@ public void moveBot(double drive, double rotate, double strafe, double scaleFact
         double PCoeff = 0.1;
         // keep looping while we have time remaining.
 
-        while (robot.backTouchSensor.getState()) {
-
+//        while (robot.backTouchSensor.getState()) {
+        while (robot.backDistance.getDistance(DistanceUnit.CM)> 3) {
             telemetry.addData("say", "gyrohold for the touch sensor");
             telemetry.update();
             // Update telemetry & Allow time for other processes to run.
@@ -524,6 +579,26 @@ public void moveBot(double drive, double rotate, double strafe, double scaleFact
         }
 
         //stop all motion
+        stopBot();
+    }
+
+    public void gyroSpin(double heading) {
+        // This function spins the robot in place to a desired heading
+
+        // Get the current heading error between actual and desired
+        double error = getError(heading);
+        // While we are greater than 5 degrees from desired heading (5 seems to work best)
+        while (!isStopRequested() && Math.abs(error) > 5) {
+            // Rotate the robot in the correct direction.
+            // Don't use more than 0.3 input power or it goes too fast
+            if (error < 0 && Math.abs(error) > 5) {
+                moveBot(0, -0.3, 0, 0.4);
+            } else {
+                moveBot(0, 0.3, 0, 0.4);
+            }
+            //Check the error again for the next loop
+            error = getError(heading);
+        }
         stopBot();
     }
 

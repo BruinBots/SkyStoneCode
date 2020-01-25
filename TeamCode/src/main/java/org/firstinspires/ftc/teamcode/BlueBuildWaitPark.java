@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -12,12 +11,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-@Autonomous(name = "BlueBlockWaitPark", group = "Alex")
+@Autonomous(name = "BlueBuildWaitPark", group = "Alex")
 
-public class BlueBlockWaitPark extends LinearOpMode {
+public class BlueBuildWaitPark extends LinearOpMode {
 
     HardwareBruinBot robot = new HardwareBruinBot();
-
 
     private ElapsedTime runtime = new ElapsedTime();
     //public boolean found() { return GoldAlignExample.isFound(); }
@@ -63,97 +61,56 @@ public class BlueBlockWaitPark extends LinearOpMode {
         double rotate = 0.2; // Rotation Speed
         double strafe = 0.5;  // Strafe Speed
 
-
         //put them into a known position
         robot.rightPlatformServo.setPosition(.1);
         robot.leftPlatformServo.setPosition(.1);
 
 
-        //lift arm a little bit
 
-//        robot.armLiftMotor.setTargetPosition(200);
-//        robot.armLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        robot.armLiftMotor.setPower(1);
-//        sleep(500);
-
-        //extend arm
-
-//        robot.armExtendMotor.setPower(-.5);
-//        sleep(2000);
-//        robot.armExtendMotor.setPower(0);
-
-        //lower arm
-
-//        robot.armLiftMotor.setTargetPosition(-30);
-//        robot.armLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        robot.armLiftMotor.setPower(1);
-//        sleep(2000);
-
-        //move forward
-
+//        sleep(10000);
+//
+//
 //        moveBot(-1,0,0,.2);
-//        sleep(2200);
+//        sleep(500);
 //        stopBot();
 //
-//        //grab block
-//        robot.clawServo.setPosition(.1);
-//        sleep(750);
-//
-//        //lift arm
-//
-//        robot.armLiftMotor.setTargetPosition(300);
-//        robot.armLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        robot.armLiftMotor.setPower(1);
-//
-//        //back up
-//
-//        moveBot(1,0,0,.2);
-//        sleep(100);
-//        stopBot();
-//
-//        robot.armExtendMotor.setPower(.5);
-//        sleep(1500);
-//        robot.armExtendMotor.setPower(0);
-//
-//
-//
-//        //strafe left
-//
-//        gyroHoldStrafe(0,0,1,6);
-//        stopBot();
-//
-//        //drive to platform
-//
-//        while (robot.frontTouchSensor.getState()) {
-//            moveBot(-1, 0, 0, .2); // 1 drives backwards, -1 drives forward
+////        strafe left until 17 inches of wall.
+//        while (rangeSensor()>=17) {
+//            //find gyrostrafe
+//            moveBot(0,0,1,.2);
 //        }
 //        stopBot();
 //
-//        //drop block
 //
-//        robot.clawServo.setPosition(1);
-//        //we might want to grab the platform to drag it back if the other team is a brick
+////        Move forward until the front touch sensor is pressed
+//        while (robot.frontTouchSensor.getState()) {
+//            moveBot(-1, 0, 0, .2);
+////            sleep(2000);
+//        }
+//     stopBot();
 //
+////        Clamp latches
+//        robot.rightPlatformServo.setPosition(1);
+//        robot.leftPlatformServo.setPosition(1);
+//        sleep(1000);
 //
-//        robot.armLiftMotor.setTargetPosition(300);
-//        robot.armLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        robot.armLiftMotor.setPower(1);
-//
-//
-////        robot.armExtendMotor.setPower(.5);
-////        sleep(1500);
-////        robot.armExtendMotor.setPower(0);
-//
-//        moveBot(1,0,0,.2); // 1 drives backwards, -1 drives forwards
-//        sleep(900);
+////        Move back until the back touch sensor is pressed
+//        gyroHoldStopOnTouch(1,0);
 //        stopBot();
 //
-//        robot.clawServo.setPosition(.1);
-//
-//        //park on line
+////        Release latches
+//        robot.rightPlatformServo.setPosition(0);
+//        robot.leftPlatformServo.setPosition(0);
+//        sleep(2000);
 
-//        sleep for 20 seconds
+//        moveBot(-1,0,0, .2);
+//        sleep(500);
+//        stopBot();
 
+//        Strafe
+//        gyroStrafe(-.5,0);
+
+//        wait for 20 seconds
 
         ElapsedTime holdTimer = new ElapsedTime();
         // keep looping while we have time remaining.
@@ -165,28 +122,15 @@ public class BlueBlockWaitPark extends LinearOpMode {
         }
         stopBot();
 
-        robot.clawServo.setPosition(.1);
+//        move forward to not touch wall
 
-
-//move forward to not touch wall
         moveBot(-1,0,0,.2); // 1 drives backwards, -1 drives forwards
         sleep(200);
         stopBot();
 
-//        strafe left to park on line
-        gyroHoldStrafe(0,0,-1,3.5);  // strafe -1 drives right, 1 drives left
+//        strafe to park on line
+        gyroHoldStrafe(0, 0, 1, 3.5);
         stopBot();
-
-
-//        robot.armLiftMotor.setTargetPosition(-30);
-//        robot.armLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        robot.armLiftMotor.setPower(1);
-//
-//
-//        robot.armExtendMotor.setPower(.5);
-//        sleep(250);
-//        robot.armExtendMotor.setPower(0);
-
 
         //hoping to move the robot 2 seconds forwards
 //        moveBot(1, 0, 0, 0.2);
@@ -529,7 +473,7 @@ public void moveBot(double drive, double rotate, double strafe, double scaleFact
             // Update telemetry & Allow time for other processes to run.
             //error = Range.clip(getError(angle),-0.3,0.3);
             error = PCoeff * getError(angle);
-            moveBot(speed, error, 0, 0.2);
+            moveBot(speed, error, 0, 0.3);
         }
 
         //stop all motion
@@ -580,8 +524,6 @@ public void moveBot(double drive, double rotate, double strafe, double scaleFact
      * @param holdTime   Length of time (in seconds) to hold the specified heading.
      */
 
-
-    //holdtime is in seconds
     public void gyroHoldStrafe( double speed, double angle, double strafe, double holdTime) {
         // This function drives on a specified heading for a given time
         // Time is in seconds!!!!!
@@ -596,10 +538,6 @@ public void moveBot(double drive, double rotate, double strafe, double scaleFact
             error = PCoeff * getError(angle);
             moveBot(speed, error, strafe, 0.3);
         }
-
-
-
-
 
         //stop all motion
         stopBot();

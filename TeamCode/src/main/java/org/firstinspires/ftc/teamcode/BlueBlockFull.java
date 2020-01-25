@@ -55,6 +55,7 @@ public class BlueBlockFull extends LinearOpMode {
 
         //reset the encoder
         robot.armLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.tapeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         // Wait for the Start button to be pushed
         while (!isStarted()) {
             // Put things to do prior to start in here
@@ -94,7 +95,7 @@ public class BlueBlockFull extends LinearOpMode {
         //move forward
 
         moveBot(-1,0,0,.2);
-        sleep(1700);
+        sleep(2000);
         stopBot();
 
         //grab block
@@ -103,7 +104,7 @@ public class BlueBlockFull extends LinearOpMode {
 
         //lift arm
 
-        robot.armLiftMotor.setTargetPosition(370);
+        robot.armLiftMotor.setTargetPosition(300);
         robot.armLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.armLiftMotor.setPower(1);
         sleep(1000);
@@ -122,7 +123,7 @@ public class BlueBlockFull extends LinearOpMode {
 
         //strafe left
 
-        gyroHoldStrafe(0,0,1,8);
+        gyroHoldStrafe(0,0,1,10);
         stopBot();
 
         //drive to platform
@@ -155,7 +156,28 @@ public class BlueBlockFull extends LinearOpMode {
 
         //park on line
 
-        gyroHoldStrafe(0,0,-1,4.5);  // strafe -1 drives right, 1 drives left
+
+
+
+
+        moveBot(-1,0,0,.2);
+        sleep(400);
+        stopBot();
+
+
+        gyroSpin(90);
+        stopBot();
+
+        while (robot.backDistance.getDistance(DistanceUnit.INCH) < 24) {
+            moveBot(-1,0,0, .2);
+        }
+        stopBot();
+
+
+        robot.tapeMotor.setTargetPosition(-1400);
+        robot.tapeMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.tapeMotor.setPower(1);
+        sleep(5000);
         stopBot();
 
 
@@ -391,6 +413,29 @@ public void moveBot(double drive, double rotate, double strafe, double scaleFact
 
 
 }
+
+
+    public void gyroSpin(double heading) {
+        // This function spins the robot in place to a desired heading
+
+        // Get the current heading error between actual and desired
+        double error = getError(heading);
+        // While we are greater than 5 degrees from desired heading (5 seems to work best)
+        while (!isStopRequested() && Math.abs(error) > 5) {
+            // Rotate the robot in the correct direction.
+            // Don't use more than 0.3 input power or it goes too fast
+            if (error < 0 && Math.abs(error) > 5) {
+                moveBot(0, -1, 0, 0.4);
+            } else {
+                moveBot(0, 1, 0, 0.4);
+            }
+            //Check the error again for the next loop
+            error = getError(heading);
+        }
+        stopBot();
+    }
+
+
     public void stopBot()
     {
         // This function stops the robot
@@ -503,8 +548,8 @@ public void moveBot(double drive, double rotate, double strafe, double scaleFact
         double PCoeff = 0.1;
         // keep looping while we have time remaining.
 
-        while (robot.backTouchSensor.getState()) {
-
+//        while (robot.backTouchSensor.getState()) {
+        while (robot.backDistance.getDistance(DistanceUnit.CM)> 3) {
             telemetry.addData("say", "gyrohold for the touch sensor");
             telemetry.update();
             // Update telemetry & Allow time for other processes to run.
