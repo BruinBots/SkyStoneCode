@@ -56,6 +56,12 @@ public class GregTapeTest extends LinearOpMode {
         sleep(5000);
         stopBot();
 
+        // now try it through moveLatches
+        //moveLatches.myMethod(robot, .1);
+        Latches.move(robot, 1); // 1 = down and 0 = up
+        sleep(5000);
+        stopBot();
+
     }
 
 
