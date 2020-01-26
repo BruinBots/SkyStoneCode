@@ -67,6 +67,11 @@ public class GregLatchesTest extends LinearOpMode {
         sleep(5000);
         stopBot();
 
+        // now reset the Latches to .5 again (strange position to know we have succeeded)
+        Latches.move(robot, .5);
+        sleep(5000);
+        stop();
+
     }
 
 
