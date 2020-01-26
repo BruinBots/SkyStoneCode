@@ -45,13 +45,15 @@ public class GregTapeTest extends LinearOpMode {
         robot.rightPlatformServo.setPosition(.1);
         robot.leftPlatformServo.setPosition(.1);
 
-        // sleep(7000);
+        sleep(5000);
+
+        setLatches(.5);
 
 
 //        robot.tapeMotor.setTargetPosition(-100);
 //        robot.tapeMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //        robot.tapeMotor.setPower(1);
-        sleep(1000);
+        sleep(5000);
         stopBot();
 
     }
@@ -67,6 +69,13 @@ public class GregTapeTest extends LinearOpMode {
         robot.rightRearDrive.setPower(0);
     }
 
+// set the latches to a specific value
+    public void setLatches(double position)
+    {
+        robot.rightPlatformServo.setPosition(position);
+        robot.leftPlatformServo.setPosition(position);
+
+    }
 
     }
 
