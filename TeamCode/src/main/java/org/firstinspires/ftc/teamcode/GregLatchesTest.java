@@ -13,17 +13,16 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 import static java.lang.Math.abs;
 
-@Autonomous(name = "GregTapeTest", group = "Greg")
+@Autonomous(name = "GregLatchesTest", group = "Greg")
 
 // Testing external methods for files [Learning]
-// only thing it should do is just push out the tape measure a bit.
-// Bad name, but now doing just latch
-// 1) get method internal to this class to work
-// 2) copy method to a different file to make sure it works
-public class GregTapeTest extends LinearOpMode {
+// only thing it should do is just move the latches 3 times.
+// 1) get it to work directly in code (tested and works)
+// 2) get method internal to this class to work (setLatches -- tested and works)
+// 3) copy method to a different file to make sure it works (file is Latches; method is move)
+public class GregLatchesTest extends LinearOpMode {
 
     HardwareBruinBot robot = new HardwareBruinBot();
-
 
 //    private ElapsedTime runtime = new ElapsedTime();
     //public boolean found() { return GoldAlignExample.isFound(); }
@@ -41,12 +40,16 @@ public class GregTapeTest extends LinearOpMode {
         while (!isStarted()) {
              // Put things to do prior to start in here
         }
-        //put them into a known position
+        //put them into a known position using direct calls (worst way to do this)
         robot.rightPlatformServo.setPosition(.1);
         robot.leftPlatformServo.setPosition(.1);
 
         sleep(5000);
 
+        // put them into a known position using a method existing in this file
+        // not a terrible way to do it but if setLatches method is used in any other file
+        // and it changes, it has to be changed in every single file and there is a lot of
+        // duplication, which is not ideal.
         setLatches(.5);
 
 
@@ -57,7 +60,9 @@ public class GregTapeTest extends LinearOpMode {
         stopBot();
 
         // now try it through moveLatches
-        //moveLatches.myMethod(robot, .1);
+        // Best way:  put the method in another file, grouped around different capabilities or
+        // sensors or movements or motors or whatever.  Then when you want to change it you make
+        // a single change there and it will be changed in all places
         Latches.move(robot, 1); // 1 = down and 0 = up
         sleep(5000);
         stopBot();
