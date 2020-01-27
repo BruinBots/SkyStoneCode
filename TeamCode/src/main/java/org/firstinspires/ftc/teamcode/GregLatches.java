@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
-public class Latches {
+public class GregLatches {
 
     /**
      * @param robot Pass the robot from HardwareBruinBot after you have initialized it
