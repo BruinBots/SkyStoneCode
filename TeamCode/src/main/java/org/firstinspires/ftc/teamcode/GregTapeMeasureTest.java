@@ -65,24 +65,29 @@ public class GregTapeMeasureTest extends LinearOpMode {
         // move in
         GregTapeMeasure.goToPosition(robot, -300);
         //GregLatches.move(robot, 1); // 1 = down and 0 = up
-        sleep(5000);
+        sleep(3000);
         stopBot();
 
         GregTapeMeasure.goToPosition(robot, -200);
-        sleep(5000);
+        sleep(3000);
         stopBot();
 
         GregTapeMeasure.goOutOnePortion(robot);
-        sleep(5000);
+        sleep(3000);
         stopBot();
 
         GregTapeMeasure.goOutOnePortion(robot);
-        sleep(5000);
+        sleep(3000);
         stopBot();
 
         GregTapeMeasure.goInOnePortion(robot);
-        sleep(5000);
+        sleep(3000);
         stopBot();
+
+        GregTapeMeasure.goToPosition(robot, 0);
+        sleep(3000);
+        stopBot();
+
 
         // now reset
         //GregLatches.move(robot, 1);
