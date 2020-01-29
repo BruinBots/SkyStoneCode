@@ -3,24 +3,15 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-
-import static java.lang.Math.abs;
-
-@Autonomous(name = "GregLatchesTest", group = "Greg")
+@Autonomous(name = "GregTapeMeasureTest", group = "Greg")
 
 // Testing external methods for files [Learning]
 // only thing it should do is just move the latches 3 times.
 // 1) get it to work directly in code (tested and works)
 // 2) get method internal to this class to work (setLatches -- tested and works)
 // 3) copy method to a different file to make sure it works (file is Latches; method is move)
-public class GregLatchesTest extends LinearOpMode {
+public class GregTapeMeasureTest extends LinearOpMode {
 
     HardwareBruinBot robot = new HardwareBruinBot();
 
@@ -41,39 +32,60 @@ public class GregLatchesTest extends LinearOpMode {
              // Put things to do prior to start in here
         }
         //put them into a known position using direct calls (worst way to do this)
-        robot.rightPlatformServo.setPosition(.1);
-        robot.leftPlatformServo.setPosition(.1);
+// not safe to move tape this way so I am going to not do it.
+//        robot.rightPlatformServo.setPosition(.1);
+//        robot.leftPlatformServo.setPosition(.1);
 
-        sleep(5000);
+     //   sleep(5000);
 
         // put them into a known position using a method existing in this file
         // not a terrible way to do it but if setLatches method is used in any other file
         // and it changes, it has to be changed in every single file and there is a lot of
         // duplication, which is not ideal.
-        setLatches(.5);
+        // only going to use GregTapeMeasure
+     //   setLatches(.5);
 
 
 //        robot.tapeMotor.setTargetPosition(-100);
 //        robot.tapeMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //        robot.tapeMotor.setPower(1);
-        sleep(5000);
-        stopBot();
+     //   sleep(5000);
+//        stopBot();
 
-        // now try it through moveLatches
+        // now try it through GregTapeMeasure
         // Best way:  put the method in another file, grouped around different capabilities or
         // sensors or movements or motors or whatever.  Then when you want to change it you make
         // a single change there and it will be changed in all places
-        GregLatches.move(robot, 1); // 1 = down and 0 = up
+
+        // pattern should be:
+        // move out
+        // move in
+        // move out
+        // move out
+        // move in
+        GregTapeMeasure.goToPosition(robot, -300);
+        //GregLatches.move(robot, 1); // 1 = down and 0 = up
         sleep(5000);
         stopBot();
 
-        // now reset the Latches to .5 again (strange position to know we have succeeded)
-        GregLatches.move(robot, .5);
+        GregTapeMeasure.goToPosition(robot, -200);
         sleep(5000);
-        stop();
+        stopBot();
+
+        GregTapeMeasure.goOutOnePortion(robot);
+        sleep(5000);
+        stopBot();
+
+        GregTapeMeasure.goOutOnePortion(robot);
+        sleep(5000);
+        stopBot();
+
+        GregTapeMeasure.goInOnePortion(robot);
+        sleep(5000);
+        stopBot();
 
         // now reset
-        GregLatches.move(robot, 1);
+        //GregLatches.move(robot, 1);
         //GregLatches.move(robot, .8);
 
     }
