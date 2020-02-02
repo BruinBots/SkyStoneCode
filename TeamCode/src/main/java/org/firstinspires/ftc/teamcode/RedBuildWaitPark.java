@@ -1,8 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
 
+import android.graphics.Color;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -13,10 +17,15 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 @Autonomous(name = "RedBuildWaitPark", group = "Alex")
+//@Disabled
 
 public class RedBuildWaitPark extends LinearOpMode {
 
     HardwareBruinBot robot = new HardwareBruinBot();
+    int RED = 3;
+    int BLUE = 2;
+    int BLACK = 1;
+    int UNKNOWN = 0;
 
 
     private ElapsedTime runtime = new ElapsedTime();
@@ -52,6 +61,11 @@ public class RedBuildWaitPark extends LinearOpMode {
 
         //Initialize hardware;
         robot.init(hardwareMap);
+//        ColorSensor colorSensor;    // Hardware Device Object
+
+
+//        colorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
+
 
         //reset the encoder
         robot.armLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -62,11 +76,20 @@ public class RedBuildWaitPark extends LinearOpMode {
         double fwdSpeed=0.3;  // Forward Speed, Normally 0.1
         double rotate = 0.2; // Rotation Speed
         double strafe = 0.5;  // Strafe Speed
+        float hsvValues[] = {0F,0F,0F};
+        final float values[] = hsvValues;
 
 
-        //put them into a known position
-        robot.rightPlatformServo.setPosition(.1);
-        robot.leftPlatformServo.setPosition(.1);
+//        //put them into a known position
+//        robot.rightPlatformServo.setPosition(.1);
+//        robot.leftPlatformServo.setPosition(.1);
+
+
+        while (!isStopRequested()){
+            colorSensor();
+          //  telemetry.addData("Color", colorSensor());
+        }
+
 
 
         //lift arm a little bit
@@ -155,25 +178,25 @@ public class RedBuildWaitPark extends LinearOpMode {
 //        sleep for 20 seconds
 
 
-        ElapsedTime holdTimer = new ElapsedTime();
-        // keep looping while we have time remaining.
-        holdTimer.reset();
-        while ((!isStopRequested() && holdTimer.time() < 20)) {
-            // Update telemetry & Allow time for other processes to run.
-            //error = Range.clip(getError(angle),-0.3,0.3);
-            sleep(1000);
-        }
-        stopBot();
-
-
-        //move forward to not touch wall
-        moveBot(-1,0,0,.2); // 1 drives backwards, -1 drives forwards
-        sleep(200);
-        stopBot();
-
-//        strafe left to park on line
-        gyroHoldStrafe(0,0,-1,3.5);  // strafe -1 drives right, 1 drives left
-        stopBot();
+//        ElapsedTime holdTimer = new ElapsedTime();
+//        // keep looping while we have time remaining.
+//        holdTimer.reset();
+//        while ((!isStopRequested() && holdTimer.time() < 20)) {
+//            // Update telemetry & Allow time for other processes to run.
+//            //error = Range.clip(getError(angle),-0.3,0.3);
+//            sleep(1000);
+//        }
+//        stopBot();
+//
+//
+//        //move forward to not touch wall
+//        moveBot(-1,0,0,.2); // 1 drives backwards, -1 drives forwards
+//        sleep(200);
+//        stopBot();
+//
+////        strafe left to park on line
+//        gyroHoldStrafe(0,0,-1,3.5);  // strafe -1 drives right, 1 drives left
+//        stopBot();
 
 
 //        robot.armLiftMotor.setTargetPosition(-30);
@@ -416,6 +439,69 @@ public void moveBot(double drive, double rotate, double strafe, double scaleFact
         robot.rightFrontDrive.setPower(0);
         robot.rightRearDrive.setPower(0);
     }
+
+
+
+    public int colorSensor() {
+        // hsvValues is an array that will hold the hue, saturation, and value information.
+        float hsvValues[] = {0F,0F,0F};
+
+        //The values for the ideal color
+        float HueValueBlack = 160;
+        float HuevalueBlue = 215;
+        float HueValueRed = 358;
+
+        //the actual hue values that we use to determine the color
+        float BlackDifference;
+        float BlueDifference;
+        float RedDifference;
+
+        int returnColor;
+
+       // robot.colorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
+
+//        Color.RGBToHSV(robot.colorSensor.red() * 8, robot.colorSensor.green() * 8, robot.colorSensor.blue() * 8, hsvValues);
+        Color.RGBToHSV(robot.colorSensor.red() * 8, robot.colorSensor.green() * 8, robot.colorSensor.blue() * 8, hsvValues);
+
+        BlackDifference = hsvValues[0] - HueValueBlack;
+        BlueDifference = hsvValues[0] - HuevalueBlue;
+        RedDifference = hsvValues[0] - HueValueRed;
+
+
+
+        returnColor = UNKNOWN;
+        if (Math.abs(BlackDifference) <= Math.abs(BlueDifference) && Math.abs(BlackDifference) <= Math.abs(RedDifference)) {
+            returnColor = BLACK;
+        }
+        else {
+            if (Math.abs(BlueDifference) <= Math.abs(RedDifference) && Math.abs(BlueDifference) <= BlackDifference) {
+                returnColor = BLUE;
+            }
+            else {
+                if (Math.abs(RedDifference) <= Math.abs(BlackDifference) && Math.abs(RedDifference) <= Math.abs(BlueDifference)) {
+                    returnColor = RED;
+                }
+            }
+        }
+
+//        telemetry.addData("LED", bLedOn ? "On" : "Off");
+        telemetry.addData("Clear", robot.colorSensor.alpha());
+        telemetry.addData("Red  ", robot.colorSensor.red());
+        telemetry.addData("Green", robot.colorSensor.green());
+        telemetry.addData("Blue ", robot.colorSensor.blue());
+        telemetry.addData("Hue", hsvValues[0]);
+
+        telemetry.addData("hsvValues", hsvValues[0]);
+        telemetry.addData("BlackDifference", BlackDifference);
+        telemetry.addData("BlueDifference", BlueDifference);
+        telemetry.addData("RedDifference", RedDifference);
+        telemetry.addData("returnColor", returnColor);
+        telemetry.update();
+        return (returnColor);
+
+    }
+
+
 
     public double sonarDistance (){
         // Returns distance from the sonar sensor over an average of 4 values

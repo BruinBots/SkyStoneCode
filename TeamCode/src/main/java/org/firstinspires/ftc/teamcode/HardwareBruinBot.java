@@ -36,6 +36,7 @@ import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -53,6 +54,7 @@ public DcMotor rightFrontDrive  = null;
 public DcMotor rightRearDrive = null;
 public DcMotor armExtendMotor = null;
 public DcMotor armLiftMotor = null;
+public DcMotor tapeMotor = null;
 
 public Servo clawServo = null;
 public Servo leftPlatformServo;
@@ -67,6 +69,7 @@ public BNO055IMU gyro;
 public ModernRoboticsI2cRangeSensor rangeSensor;
 public ColorSensor colorSensor;
 public AnalogInput sonarSensor;
+public DistanceSensor backDistance;
 
 public static final double MID_SERVO       =  0.5 ;
 public static final double ARM_UP_POWER    =  0.45 ;
@@ -94,6 +97,7 @@ public void init(HardwareMap ahwMap) {
 
     armExtendMotor = hwMap.get(DcMotor.class, "armExtendMotor");
     armLiftMotor = hwMap.get(DcMotor.class, "armLiftMotor");
+    tapeMotor = hwMap.get(DcMotor.class, "tapeMotor");
 
     //Initialize Servos
     clawServo = hwMap.get(Servo.class, "clawServo");
@@ -106,6 +110,9 @@ public void init(HardwareMap ahwMap) {
     backTouchSensor = hwMap.get(DigitalChannel.class, "backTouchSensor");
     frontTouchSensor.setMode(DigitalChannel.Mode.INPUT);
     backTouchSensor.setMode(DigitalChannel.Mode.INPUT);
+
+    //color sensor
+    colorSensor = hwMap.get(ColorSensor.class, "colorSensor");
 
     // REV IMU Setup
     BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -122,6 +129,8 @@ public void init(HardwareMap ahwMap) {
 
     //Initialize Analog Sonar Sensor
     sonarSensor = hwMap.get(AnalogInput.class,"sonarSensor");
+
+    backDistance = hwMap.get(DistanceSensor.class, "sensor_range");
 
     //set drive motor directions
     rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);

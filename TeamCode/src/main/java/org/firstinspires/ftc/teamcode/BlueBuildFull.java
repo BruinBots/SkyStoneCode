@@ -53,6 +53,7 @@ public class BlueBuildFull extends LinearOpMode {
 
         //reset the encoder
         robot.armLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.tapeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         // Wait for the Start button to be pushed
         while (!isStarted()) {
             // Put things to do prior to start in here
@@ -67,7 +68,7 @@ public class BlueBuildFull extends LinearOpMode {
 
 
 
-        sleep(10000);
+        sleep(7000);
 
 
         moveBot(-1,0,0,.2);
@@ -75,7 +76,7 @@ public class BlueBuildFull extends LinearOpMode {
         stopBot();
 
 //        strafe left until 17 inches of wall.
-        while (rangeSensor()>=17) {
+        while (rangeSensor()>=16) {
             //find gyrostrafe
             moveBot(0,0,1,.2);
         }
@@ -103,13 +104,33 @@ public class BlueBuildFull extends LinearOpMode {
         robot.leftPlatformServo.setPosition(0);
         sleep(2000);
 
+
+        //        close claw
+        robot.clawServo.setPosition(.1);
+
 //        moveBot(-1,0,0, .2);
 //        sleep(500);
 //        stopBot();
 
 //        Strafe
 //        gyroStrafe(-.5,0);
-        gyroHoldStrafe(0, 0, -1, 4);
+        gyroHoldStrafe(.01, 0, -1, 2);
+        stopBot();
+
+
+        moveBot(-1,0,0,.2);
+        sleep(400);
+        stopBot();
+
+
+        gyroSpin(90);
+        stopBot();
+
+
+        robot.tapeMotor.setTargetPosition(-1400);
+        robot.tapeMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.tapeMotor.setPower(1);
+        sleep(5000);
         stopBot();
 
         //hoping to move the robot 2 seconds forwards
@@ -333,7 +354,9 @@ public void moveBot(double drive, double rotate, double strafe, double scaleFact
 
 
 
-}
+    }
+
+
     public void stopBot()
     {
         // This function stops the robot
@@ -342,6 +365,28 @@ public void moveBot(double drive, double rotate, double strafe, double scaleFact
         robot.rightFrontDrive.setPower(0);
         robot.rightRearDrive.setPower(0);
     }
+
+
+    public void gyroSpin(double heading) {
+        // This function spins the robot in place to a desired heading
+
+        // Get the current heading error between actual and desired
+        double error = getError(heading);
+        // While we are greater than 5 degrees from desired heading (5 seems to work best)
+        while (!isStopRequested() && Math.abs(error) > 5) {
+            // Rotate the robot in the correct direction.
+            // Don't use more than 0.3 input power or it goes too fast
+            if (error < 0 && Math.abs(error) > 5) {
+                moveBot(0, -0.3, 0, 0.4);
+            } else {
+                moveBot(0, 0.3, 0, 0.4);
+            }
+            //Check the error again for the next loop
+            error = getError(heading);
+        }
+        stopBot();
+    }
+
 
     public double sonarDistance (){
         // Returns distance from the sonar sensor over an average of 4 values
@@ -446,8 +491,8 @@ public void moveBot(double drive, double rotate, double strafe, double scaleFact
         double PCoeff = 0.1;
         // keep looping while we have time remaining.
 
-        while (robot.backTouchSensor.getState()) {
-
+//        while (robot.backTouchSensor.getState()) {
+        while (robot.backDistance.getDistance(DistanceUnit.CM)> 3) {
             telemetry.addData("say", "gyrohold for the touch sensor");
             telemetry.update();
             // Update telemetry & Allow time for other processes to run.
