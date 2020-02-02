@@ -76,6 +76,8 @@ public class GregLatchesTest extends LinearOpMode {
         GregLatches.move(robot, 1);
         //GregLatches.move(robot, .8);
 
+        //GregLatches.move(robot, 1);
+
     }
 
 

@@ -11,7 +11,7 @@ public class GregTapeMeasure {
     final static int MAX_TAPEMEASURE_POSITION = 0;
     final static int MIN_TAPEMEASURE_POSITION = -1600;
     final static int OVERDRIVE_VALUE = 8; //
-    final static double POWER = 0.5;  // how fast to move the tape measure  Competition should be 1.0
+    final static double POWER = 1.0;  // how fast to move the tape measure  Competition should be 1.0; testing = .5
     final static int OUT_PORTION = 200;  // number of encoder ticks to move tapemeasure out
     final static int IN_PORTION = 200;   // number of encoder ticks to move tapemeasure in
 
@@ -42,7 +42,7 @@ public class GregTapeMeasure {
     public static void goOutOnePortion (HardwareBruinBot robot) {
 
         int currentPosition = robot.tapeMotor.getCurrentPosition();
-        int desiredPosition = currentPosition + OUT_PORTION;
+        int desiredPosition = currentPosition - OUT_PORTION;
         goToPosition(robot, desiredPosition);
 
     }
@@ -50,7 +50,7 @@ public class GregTapeMeasure {
     public static void goInOnePortion (HardwareBruinBot robot) {
 
         int currentPosition = robot.tapeMotor.getCurrentPosition();
-        int desiredPosition = currentPosition - IN_PORTION;
+        int desiredPosition = currentPosition + IN_PORTION;
         goToPosition(robot, desiredPosition);
 
     }

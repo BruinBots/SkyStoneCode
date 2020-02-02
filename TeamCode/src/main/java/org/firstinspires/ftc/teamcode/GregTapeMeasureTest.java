@@ -15,10 +15,6 @@ public class GregTapeMeasureTest extends LinearOpMode {
 
     HardwareBruinBot robot = new HardwareBruinBot();
 
-//    private ElapsedTime runtime = new ElapsedTime();
-    //public boolean found() { return GoldAlignExample.isFound(); }
-    //public boolean isAligned() { return detector.getAligned(); }
-    //public double getX() { return detector.getXPosition(); }
     public void runOpMode () {
 
     //Initialize hardware;
@@ -63,9 +59,10 @@ public class GregTapeMeasureTest extends LinearOpMode {
         // move out
         // move out
         // move in
-        GregTapeMeasure.goToPosition(robot, -300);
+        // move back to 0
+        GregTapeMeasure.goToPosition(robot, -800);
         //GregLatches.move(robot, 1); // 1 = down and 0 = up
-        sleep(3000);
+        sleep(5000);
         stopBot();
 
         GregTapeMeasure.goToPosition(robot, -200);
