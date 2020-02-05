@@ -153,27 +153,14 @@ public class SkystoneTeleOpWithoutReset extends LinearOpMode {
 
 
 
+
+
                 if (gamepad2.a) {
-                    if (drivespeed) {
-                        drivespeed = false;
-                        sleep(10);
-                        telemetry.addData("say", "SPEED");
-                    }
-                     else if (!drivespeed)  {
-                         drivespeed = true;
-                         sleep(10);
-                         telemetry.addData("say", "not speed");
-                     }
+                    moveBot(drive, rotate, strafe, 0.4);
 
                 }
-                telemetry.update();
-
-                if (drivespeed) {
-                    moveBot(drive, rotate, strafe, 0.3);
-
-                }
-                else if (!drivespeed) {
-                    moveBot(drive,rotate,strafe,0.6);
+                else if (!gamepad2.a) {
+                    moveBot(drive,rotate,strafe,0.7);
                 }
 
 

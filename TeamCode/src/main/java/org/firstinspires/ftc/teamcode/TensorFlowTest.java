@@ -1,4 +1,4 @@
-/* Copyright (c) 2018 FIRST. All rights reserved.
+/* Copyright (c) 2019 FIRST. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted (subject to the limitations in the disclaimer below) provided that
@@ -42,8 +42,8 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import java.util.List;
 
 /**
- * This 2018-2019 OpMode illustrates the basics of using the TensorFlow Object Detection API to
- * determine the position of the gold and silver minerals.
+ * This 2019-2020 OpMode illustrates the basics of using the TensorFlow Object Detection API to
+ * determine the position of the Skystone game elements.
  *
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list.
@@ -51,14 +51,13 @@ import java.util.List;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@TeleOp(name = "Concept: TensorFlow Object Detection", group = "Concept")
-@Disabled
+@TeleOp(name = "Concept: TensorFlowTest", group = "Alex")
+public class TensorFlowTest extends LinearOpMode {
+    private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
+    private static final String LABEL_FIRST_ELEMENT = "Stone";
+    private static final String LABEL_SECOND_ELEMENT = "Skystone";
 
-public class BruinBotConceptTensorFlowObjectDetection extends LinearOpMode {
-    private static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
-    private static final String LABEL_GOLD_MINERAL = "Gold Mineral";
-    private static final String LABEL_SILVER_MINERAL = "Silver Mineral";
-
+    HardwareBruinBot robot = new HardwareBruinBot();
     /*
      * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
      * 'parameters.vuforiaLicenseKey' is initialized is for illustration only, and will not function.
@@ -71,7 +70,8 @@ public class BruinBotConceptTensorFlowObjectDetection extends LinearOpMode {
      * Once you've obtained a license key, copy the string from the Vuforia web site
      * and paste it in to your code on the next line, between the double quotes.
      */
-    private static final String VUFORIA_KEY = "AU8YYQn/////AAAAGXFrahulqEjulTTNdLAcySmHbygwS4xr5RSUhekqrTcj7ErEbW1t0GxYBrB1fZFvZQcM3NCjk0dHuDH0I5cqwrblwH33sSHg0IO6XB9zE60YKnY2UiLPE8H9DQLAZjBoAAoOoNhJJQuFD2+hxs0vU74jNqyvyvsGUqqHQ7aj2EMCEbP4p6xElobK2w374MQsFvtnviNJ/pGZxeFlzta1W/DXRpq7xJY9+1eheCOGrRrkzIvS5i/L/nb9OKUP5kwJefb4oi0wMi7O1xxSMfUq+Aq1JfI4sXTXgLM/Z7dPb9zod+x8Kl9GnJ2e43OUGYqChmcpKKH0SguasN741T3zcrs1+iynm9ATD4NOk87F56xT";
+    private static final String VUFORIA_KEY =
+            "AWOfb/7/////AAABmV8ALAW+Ukzck18gNd38wGsy+MrtWKp9WaxJk+eQSEc3KZiPobcXUtTb2qUIpPIx1XJJXw9dDgmIA16vA6th895EmTEpo8LJIjyS1YWjtZejhftG+ufvRrT8vuU+u+ihSV/4LSdOlfZvRbhZCpbeSBzjV88RBKa+dPOQ60TCbn2Pphjhx0qhuLt5KX3Ap479Bil0RuMvAtdLW61rN6br01gtRrxMwLP9lh38zFuxgsBB2xfkP6rpcOaNJpKcLsxfTizN8eTcfrUYN4wHM8x7kAS0SLDPGC1lwaX/ofFuVb5lmoLAuLW+/HStgMVN88S4UlbUNhIHUWsMOh6rE52J6DtenbcE784HNUApHFXmmw22\n";
 
     /**
      * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
@@ -96,18 +96,20 @@ public class BruinBotConceptTensorFlowObjectDetection extends LinearOpMode {
         } else {
             telemetry.addData("Sorry!", "This device is not compatible with TFOD");
         }
+        /**
+         * Activate TensorFlow Object Detection before we wait for the start command.
+         * Do it here so that the Camera Stream window will have the TensorFlow annotations visible.
+         **/
+        if (tfod != null) {
+            tfod.activate();
+        }
 
         /** Wait for the game to begin */
-        telemetry.addData(">", "Press Play to start tracking");
+        telemetry.addData(">", "Press Play to start op mode");
         telemetry.update();
         waitForStart();
 
         if (opModeIsActive()) {
-            /** Activate TensorFlow Object Detection. */
-            if (tfod != null) {
-                tfod.activate();
-            }
-
             while (opModeIsActive()) {
                 if (tfod != null) {
                     // getUpdatedRecognitions() will return null if no new information is available since
@@ -115,28 +117,15 @@ public class BruinBotConceptTensorFlowObjectDetection extends LinearOpMode {
                     List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
                     if (updatedRecognitions != null) {
                       telemetry.addData("# Object Detected", updatedRecognitions.size());
-                      if (updatedRecognitions.size() == 3) {
-                        int goldMineralX = -1;
-                        int silverMineral1X = -1;
-                        int silverMineral2X = -1;
-                        for (Recognition recognition : updatedRecognitions) {
-                          if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
-                            goldMineralX = (int) recognition.getLeft();
-                          } else if (silverMineral1X == -1) {
-                            silverMineral1X = (int) recognition.getLeft();
-                          } else {
-                            silverMineral2X = (int) recognition.getLeft();
-                          }
-                        }
-                        if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
-                          if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
-                            telemetry.addData("Gold Mineral Position", "Left");
-                          } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
-                            telemetry.addData("Gold Mineral Position", "Right");
-                          } else {
-                            telemetry.addData("Gold Mineral Position", "Center");
-                          }
-                        }
+
+                      // step through the list of recognitions and display boundary info.
+                      int i = 0;
+                      for (Recognition recognition : updatedRecognitions) {
+                        telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
+                        telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
+                                          recognition.getLeft(), recognition.getTop());
+                        telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
+                                recognition.getRight(), recognition.getBottom());
                       }
                       telemetry.update();
                     }
@@ -174,7 +163,8 @@ public class BruinBotConceptTensorFlowObjectDetection extends LinearOpMode {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
             "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+        tfodParameters.minimumConfidence = 0.8;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
-        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
     }
 }

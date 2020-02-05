@@ -148,6 +148,43 @@ public class SkystoneTeleOp extends LinearOpMode {
         motorControllerEx.setPIDCoefficients(motorIndex, DcMotor.RunMode.RUN_USING_ENCODER, pidNew);
 
 
+
+
+
+
+        int motorIndexLeftFrontWheel = ((robot.leftFrontDrive).getPortNumber());
+        DcMotorControllerEx motorControllerExLeftFrontWheel = (DcMotorControllerEx)robot.leftFrontDrive.getController();
+        PIDCoefficients pidModifiedLeftFrontWheel = motorControllerExLeftFrontWheel.getPIDCoefficients(motorIndexLeftFrontWheel, DcMotor.RunMode.RUN_USING_ENCODER);
+
+
+        // change coefficients using methods included with DcMotorEx class.
+//        PIDCoefficients pidNewWheels = new PIDCoefficients(4, 2, 3);
+//        motorControllerExWheels.setPIDCoefficients(motorIndexWheels, DcMotor.RunMode.RUN_USING_ENCODER, pidNewWheels);
+
+
+
+
+        int motorIndexWheels = ((robot.leftRearDrive).getPortNumber());
+        DcMotorControllerEx motorControllerExWheels = (DcMotorControllerEx)robot.leftRearDrive.getController();
+        PIDCoefficients pidModifiedWheels = motorControllerExWheels.getPIDCoefficients(motorIndexWheels, DcMotor.RunMode.RUN_USING_ENCODER);
+
+
+        // change coefficients using methods included with DcMotorEx class.
+//        PIDCoefficients pidNewWheels = new PIDCoefficients(4, 2, 3);
+//        motorControllerExWheels.setPIDCoefficients(motorIndexWheels, DcMotor.RunMode.RUN_USING_ENCODER, pidNewWheels);
+
+
+
+
+        telemetry.addData("P,I,D (modified) (wheels)", "%.04f, %.04f, %.04f",
+                pidModifiedWheels.p, pidModifiedWheels.i, pidModifiedWheels.d);
+
+
+
+
+
+
+
 //        // Get PID constants
 //        int motorIndexTape = ((robot.tapeMotor).getPortNumber());
 //        DcMotorControllerEx motorControllerExTape = (DcMotorControllerEx)robot.tapeMotor.getController();
@@ -186,28 +223,18 @@ public class SkystoneTeleOp extends LinearOpMode {
 
 
 
+
+
                 if (gamepad2.a) {
-                    if (drivespeed) {
-                        drivespeed = false;
-                        sleep(10);
-                        telemetry.addData("say", "SPEED");
-                    }
-                     else if (!drivespeed)  {
-                         drivespeed = true;
-                         sleep(10);
-                         telemetry.addData("say", "not speed");
-                     }
+                    moveBot(drive, rotate, strafe, 0.4);
 
                 }
-//                telemetry.update();
-
-                if (drivespeed) {
-                    moveBot(drive, rotate, strafe, 0.3);
-
+                else if (!gamepad2.a) {
+                    moveBot(drive,rotate,strafe,0.7);
                 }
-                else if (!drivespeed) {
-                    moveBot(drive,rotate,strafe,0.6);
-                }
+
+
+
 
 
 
@@ -381,8 +408,8 @@ public class SkystoneTeleOp extends LinearOpMode {
                 }
                 else {
                     if (platformServoUp) {
-                        robot.rightPlatformServo.setPosition(0);
-                        robot.leftPlatformServo.setPosition(0);
+                        robot.rightPlatformServo.setPosition(.5);
+                        robot.leftPlatformServo.setPosition(.5);
                     }
                 }
 

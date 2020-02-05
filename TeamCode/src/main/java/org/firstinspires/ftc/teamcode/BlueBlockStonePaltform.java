@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -11,11 +13,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-@Autonomous(name = "BlueBuildFull", group = "Jack")
+@Autonomous(name = "BlueBlockStonePlatform", group = "Alex")
+@Disabled
 
-public class BlueBuildFull extends LinearOpMode {
+public class BlueBlockStonePaltform extends LinearOpMode {
 
     HardwareBruinBot robot = new HardwareBruinBot();
+
 
     private ElapsedTime runtime = new ElapsedTime();
     //public boolean found() { return GoldAlignExample.isFound(); }
@@ -53,7 +57,6 @@ public class BlueBuildFull extends LinearOpMode {
 
         //reset the encoder
         robot.armLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.tapeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         // Wait for the Start button to be pushed
         while (!isStarted()) {
             // Put things to do prior to start in here
@@ -61,36 +64,84 @@ public class BlueBuildFull extends LinearOpMode {
         double fwdSpeed=0.3;  // Forward Speed, Normally 0.1
         double rotate = 0.2; // Rotation Speed
         double strafe = 0.5;  // Strafe Speed
+        int currentArmExtendOut = -250;
+        int currentArmExtendIn = -50;
 
         //put them into a known position
-        Latches.move(robot, 0.5);
+        robot.rightPlatformServo.setPosition(.1);
+        robot.leftPlatformServo.setPosition(.1);
 
 
+        //lift arm a little bit
 
-        sleep(7000);
+        robot.armLiftMotor.setTargetPosition(200);
+        robot.armLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.armLiftMotor.setPower(1);
+        sleep(1000);
 
+        //extend arm
+
+        robot.armExtendMotor.setTargetPosition(currentArmExtendOut);
+        robot.armExtendMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.armExtendMotor.setPower(.9);  //small spool: power 1, big spool: power .9
+        sleep(1000);
+
+        //lower arm
+
+        robot.armLiftMotor.setTargetPosition(-30);
+        robot.armLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.armLiftMotor.setPower(1);
+        sleep(2000);
+
+        //move forward
 
         moveBot(-1,0,0,.2);
-        sleep(500);
+        sleep(2200);
         stopBot();
 
-//        strafe left until 17 inches of wall.
-        while (rangeSensor()>=16) {
-            //find gyrostrafe
-            moveBot(0,0,1,.2);
-        }
+        //grab block
+        robot.clawServo.setPosition(.1);
+        sleep(750);
+
+        //lift arm
+
+        robot.armLiftMotor.setTargetPosition(370);
+        robot.armLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.armLiftMotor.setPower(1);
+        sleep(1000);
+
+        //back up
+
+        moveBot(1,0,0,.2);
+        sleep(100);
         stopBot();
 
+        robot.armExtendMotor.setTargetPosition(currentArmExtendIn);
+        robot.armExtendMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.armExtendMotor.setPower(.9);  //small spool: power 1, big spool: power .9
 
-//        Move forward until the front touch sensor is pressed
+
+
+        //strafe left
+
+        gyroHoldStrafe(0,0,1,6);
+        stopBot();
+
+        //drive to platform
+
         while (robot.frontTouchSensor.getState()) {
-            moveBot(-1, 0, 0, .2);
-//            sleep(2000);
+            moveBot(-1, 0, 0, .2); // 1 drives backwards, -1 drives forward
         }
-     stopBot();
+        stopBot();
 
-//        Clamp latches
-        Latches.move(robot, 1);
+        //drop block
+
+        robot.clawServo.setPosition(1);
+        //we might want to grab the platform to drag it back if the other team is a brick
+
+        //        Clamp latches
+        robot.rightPlatformServo.setPosition(1);
+        robot.leftPlatformServo.setPosition(1);
         sleep(1000);
 
 //        Move back until the back touch sensor is pressed
@@ -98,38 +149,40 @@ public class BlueBuildFull extends LinearOpMode {
         stopBot();
 
 //        Release latches
-        Latches.move(robot, .5);
+        robot.rightPlatformServo.setPosition(0);
+        robot.leftPlatformServo.setPosition(0);
         sleep(2000);
 
 
-        //        close claw
+        robot.armLiftMotor.setTargetPosition(300);
+        robot.armLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.armLiftMotor.setPower(1);
+
+
+//        robot.armExtendMotor.setPower(.5);
+//        sleep(1500);
+//        robot.armExtendMotor.setPower(0);
+
+        moveBot(1,0,0,.2); // 1 drives backwards, -1 drives forwards
+        sleep(900);
+        stopBot();
+
         robot.clawServo.setPosition(.1);
 
-//        moveBot(-1,0,0, .2);
-//        sleep(500);
-//        stopBot();
+        //park on line
 
-//        Strafe
-//        gyroStrafe(-.5,0);
-        gyroHoldStrafe(.01, 0, -1, 2);
+        gyroHoldStrafe(0,0,-1,3.5);  // strafe -1 drives right, 1 drives left
         stopBot();
 
 
-        moveBot(-1,0,0,.2);
-        sleep(400);
-        stopBot();
-
-
-        gyroSpin(90);
-        stopBot();
-
-
-        robot.tapeMotor.setTargetPosition(-1400);
-        robot.tapeMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.tapeMotor.setPower(1);
-        sleep(5000);
-        stopBot();
-
+//        robot.armLiftMotor.setTargetPosition(-30);
+//        robot.armLiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        robot.armLiftMotor.setPower(1);
+//
+//
+//        robot.armExtendMotor.setPower(.5);
+//        sleep(250);
+//        robot.armExtendMotor.setPower(0);
 
 
         //hoping to move the robot 2 seconds forwards
@@ -353,9 +406,7 @@ public void moveBot(double drive, double rotate, double strafe, double scaleFact
 
 
 
-    }
-
-
+}
     public void stopBot()
     {
         // This function stops the robot
@@ -364,28 +415,6 @@ public void moveBot(double drive, double rotate, double strafe, double scaleFact
         robot.rightFrontDrive.setPower(0);
         robot.rightRearDrive.setPower(0);
     }
-
-
-    public void gyroSpin(double heading) {
-        // This function spins the robot in place to a desired heading
-
-        // Get the current heading error between actual and desired
-        double error = getError(heading);
-        // While we are greater than 5 degrees from desired heading (5 seems to work best)
-        while (!isStopRequested() && Math.abs(error) > 5) {
-            // Rotate the robot in the correct direction.
-            // Don't use more than 0.3 input power or it goes too fast
-            if (error < 0 && Math.abs(error) > 5) {
-                moveBot(0, -0.3, 0, 0.4);
-            } else {
-                moveBot(0, 0.3, 0, 0.4);
-            }
-            //Check the error again for the next loop
-            error = getError(heading);
-        }
-        stopBot();
-    }
-
 
     public double sonarDistance (){
         // Returns distance from the sonar sensor over an average of 4 values
@@ -490,14 +519,14 @@ public void moveBot(double drive, double rotate, double strafe, double scaleFact
         double PCoeff = 0.1;
         // keep looping while we have time remaining.
 
-//        while (robot.backTouchSensor.getState()) {
-        while (robot.backDistance.getDistance(DistanceUnit.CM)> 3) {
+        while (robot.backTouchSensor.getState()) {
+
             telemetry.addData("say", "gyrohold for the touch sensor");
             telemetry.update();
             // Update telemetry & Allow time for other processes to run.
             //error = Range.clip(getError(angle),-0.3,0.3);
             error = PCoeff * getError(angle);
-            moveBot(speed, error, 0, 0.3);
+            moveBot(speed, error, 0, 0.2);
         }
 
         //stop all motion
@@ -548,6 +577,8 @@ public void moveBot(double drive, double rotate, double strafe, double scaleFact
      * @param holdTime   Length of time (in seconds) to hold the specified heading.
      */
 
+
+    //holdtime is in seconds
     public void gyroHoldStrafe( double speed, double angle, double strafe, double holdTime) {
         // This function drives on a specified heading for a given time
         // Time is in seconds!!!!!
