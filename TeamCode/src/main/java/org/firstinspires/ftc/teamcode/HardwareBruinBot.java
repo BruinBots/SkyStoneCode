@@ -146,10 +146,10 @@ public void init(HardwareMap ahwMap) {
 
     // Set drive motors to run without encoders.
     // May want to use RUN_USING_ENCODERS if encoders are installed.
-    leftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-    leftRearDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-    rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-    rightRearDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    leftRearDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    rightRearDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
     // make lifting motor brake when not in use
     armLiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

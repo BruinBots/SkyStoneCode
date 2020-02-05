@@ -17,41 +17,17 @@ public class GregTapeMeasureTest extends LinearOpMode {
 
     public void runOpMode () {
 
-    //Initialize hardware;
+    //Initialize hardware (REQUIRED)
         robot.init(hardwareMap);
 
-        //reset the encoder
+        //reset the encoder on the tape measure (REQUIRED)
 
         robot.tapeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         // Wait for the Start button to be pushed
         while (!isStarted()) {
              // Put things to do prior to start in here
         }
-        //put them into a known position using direct calls (worst way to do this)
-// not safe to move tape this way so I am going to not do it.
-//        robot.rightPlatformServo.setPosition(.1);
-//        robot.leftPlatformServo.setPosition(.1);
 
-     //   sleep(5000);
-
-        // put them into a known position using a method existing in this file
-        // not a terrible way to do it but if setLatches method is used in any other file
-        // and it changes, it has to be changed in every single file and there is a lot of
-        // duplication, which is not ideal.
-        // only going to use GregTapeMeasure
-     //   setLatches(.5);
-
-
-//        robot.tapeMotor.setTargetPosition(-100);
-//        robot.tapeMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        robot.tapeMotor.setPower(1);
-     //   sleep(5000);
-//        stopBot();
-
-        // now try it through GregTapeMeasure
-        // Best way:  put the method in another file, grouped around different capabilities or
-        // sensors or movements or motors or whatever.  Then when you want to change it you make
-        // a single change there and it will be changed in all places
 
         // pattern should be:
         // move out
@@ -70,6 +46,7 @@ public class GregTapeMeasureTest extends LinearOpMode {
         stopBot();
 
         GregTapeMeasure.goOutOnePortion(robot);
+
         sleep(3000);
         stopBot();
 
@@ -86,13 +63,7 @@ public class GregTapeMeasureTest extends LinearOpMode {
         stopBot();
 
 
-        // now reset
-        //GregLatches.move(robot, 1);
-        //GregLatches.move(robot, .8);
-
     }
-
-
 
     public void stopBot()
     {
@@ -103,13 +74,6 @@ public class GregTapeMeasureTest extends LinearOpMode {
         robot.rightRearDrive.setPower(0);
     }
 
-// set the latches to a specific value
-    public void setLatches(double position)
-    {
-        robot.rightPlatformServo.setPosition(position);
-        robot.leftPlatformServo.setPosition(position);
-
-    }
 
     }
 
