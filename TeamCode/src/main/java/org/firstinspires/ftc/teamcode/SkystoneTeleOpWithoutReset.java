@@ -95,8 +95,8 @@ public class SkystoneTeleOpWithoutReset extends LinearOpMode {
         boolean armDown = false;
         boolean platformServoDown = false;
         boolean platformServoUp = false;
-        boolean tapeOut = false;
-        boolean tapeIn = false;
+       // boolean tapeOut = false;
+        //boolean tapeIn = false;
 
 
         int currentArmLiftPosition =0;  // Used to store the currently commanded arm position
@@ -104,9 +104,9 @@ public class SkystoneTeleOpWithoutReset extends LinearOpMode {
         int MAX_ARMEXTEND_POSITION = 0;
         int MIN_ARMEXTEND_POSITION = -250;  //min encoder value is actually -288
         int currentArmExtendPosition = 0;
-        int MAX_TAPEMEASURE_POSITION = 0;
-        int MIN_TAPEMEASURE_POSITION = -1600;
-        int currentTapeMeasurePosition = 0;
+//        int MAX_TAPEMEASURE_POSITION = 0;
+//        int MIN_TAPEMEASURE_POSITION = -1600;
+//        int currentTapeMeasurePosition = 0;
 
 
 
@@ -299,38 +299,42 @@ public class SkystoneTeleOpWithoutReset extends LinearOpMode {
                     robot.capstoneServo.setPosition(.8);
                 }
 
-
-
-
-
-                //Tapemeasure section
-
-                tapeIn = gamepad2.right_bumper;
-                tapeOut = gamepad2.left_bumper;
-                // Only change value if arm is near commanded value, prevents overdriving arm.  8 seems to work...
-                if (abs(currentTapeMeasurePosition-robot.tapeMotor.getCurrentPosition()) < 8){
-                    if (tapeOut) {
-                        currentTapeMeasurePosition += 200; // Add 10 to the current arm position
-                        if (currentTapeMeasurePosition > MAX_TAPEMEASURE_POSITION) {
-                            currentTapeMeasurePosition = MAX_TAPEMEASURE_POSITION; // DOn't let it go highter than Max Position
-                        }
-                    } else {
-                        if (tapeIn) {
-                            currentTapeMeasurePosition -= 200; // Subtract 10 from the current arm position
-                            if (currentTapeMeasurePosition < MIN_TAPEMEASURE_POSITION) {
-                                currentTapeMeasurePosition = MIN_TAPEMEASURE_POSITION;  // Don't let it go lower than 0
-                            }
-                        }
-                    }
+                if (gamepad2.right_bumper) {
+                    TapeMeasure.goInOnePortion(robot);
+                }
+                if (gamepad2.left_bumper) {
+                    TapeMeasure.goOutOnePortion(robot);
                 }
 
-
-                robot.tapeMotor.setTargetPosition(currentTapeMeasurePosition);
-                robot.tapeMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                robot.tapeMotor.setPower(1);
-
-                telemetry.addData("Current Commanded Pos (tape): ",currentTapeMeasurePosition);
-                telemetry.addData("Actual Pos (tape): ",robot.tapeMotor.getCurrentPosition());
+                
+                //Tapemeasure section
+//
+//                tapeIn = gamepad2.right_bumper;
+//                tapeOut = gamepad2.left_bumper;
+//                // Only change value if arm is near commanded value, prevents overdriving arm.  8 seems to work...
+//                if (abs(currentTapeMeasurePosition-robot.tapeMotor.getCurrentPosition()) < 8){
+//                    if (tapeOut) {
+//                        currentTapeMeasurePosition += 200; // Add 10 to the current arm position
+//                        if (currentTapeMeasurePosition > MAX_TAPEMEASURE_POSITION) {
+//                            currentTapeMeasurePosition = MAX_TAPEMEASURE_POSITION; // DOn't let it go highter than Max Position
+//                        }
+//                    } else {
+//                        if (tapeIn) {
+//                            currentTapeMeasurePosition -= 200; // Subtract 10 from the current arm position
+//                            if (currentTapeMeasurePosition < MIN_TAPEMEASURE_POSITION) {
+//                                currentTapeMeasurePosition = MIN_TAPEMEASURE_POSITION;  // Don't let it go lower than 0
+//                            }
+//                        }
+//                    }
+//                }
+//
+//
+//                robot.tapeMotor.setTargetPosition(currentTapeMeasurePosition);
+//                robot.tapeMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                robot.tapeMotor.setPower(1);
+//
+//                telemetry.addData("Current Commanded Pos (tape): ",currentTapeMeasurePosition);
+//                telemetry.addData("Actual Pos (tape): ",robot.tapeMotor.getCurrentPosition());
 
 
 
