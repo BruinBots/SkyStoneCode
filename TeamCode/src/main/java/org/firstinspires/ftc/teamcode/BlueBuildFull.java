@@ -63,8 +63,7 @@ public class BlueBuildFull extends LinearOpMode {
         double strafe = 0.5;  // Strafe Speed
 
         //put them into a known position
-        robot.rightPlatformServo.setPosition(.1);
-        robot.leftPlatformServo.setPosition(.1);
+        Latches.move(robot, 0.5);
 
 
 
@@ -91,8 +90,7 @@ public class BlueBuildFull extends LinearOpMode {
      stopBot();
 
 //        Clamp latches
-        robot.rightPlatformServo.setPosition(1);
-        robot.leftPlatformServo.setPosition(1);
+        Latches.move(robot, 1);
         sleep(1000);
 
 //        Move back until the back touch sensor is pressed
@@ -100,8 +98,7 @@ public class BlueBuildFull extends LinearOpMode {
         stopBot();
 
 //        Release latches
-        robot.rightPlatformServo.setPosition(0);
-        robot.leftPlatformServo.setPosition(0);
+        Latches.move(robot, .5);
         sleep(2000);
 
 
