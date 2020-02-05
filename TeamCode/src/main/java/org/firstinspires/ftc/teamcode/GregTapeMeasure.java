@@ -1,6 +1,20 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+//import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+//import org.firstinspires.ftc.robotcore.external.Telemetry;
+
+//import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+//import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+//import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+//import com.qualcomm.robotcore.hardware.VoltageSensor;
+//import com.qualcomm.robotcore.util.ElapsedTime;
+//
+//import org.firstinspires.ftc.robotcore.external.Func;
+//import org.firstinspires.ftc.robotcore.external.Telemetry;
+
+
+
 
 import static java.lang.Math.abs;
 
@@ -15,6 +29,19 @@ public class GregTapeMeasure {
     final static int OUT_PORTION = 200;  // number of encoder ticks to move tapemeasure out
     final static int IN_PORTION = 200;   // number of encoder ticks to move tapemeasure in
 
+    /**
+     * Safely goes to a particular position (0 is default/in; -1600 is all the way out).
+     * <p>
+     *     Typically used during autonomous mode
+     * </p>
+     * All tape measure position commands should use goToPosition because this does all the
+     * error checking (containing soft stops at both ends so we do not extend or retract beyond
+     * hardware boundaries)
+     *
+     * @param robot defined as a HardwareBruinBot
+     * @param desiredPosition the position you want to have the tape measure go to
+     *                        (0 is all the way in; -1600 is all the way out)
+     */
     // safely move to a position
     public static void goToPosition (HardwareBruinBot robot, int desiredPosition) {
 
@@ -39,6 +66,16 @@ public class GregTapeMeasure {
 
     }
 
+    /**
+     *
+     * Will cause the tape measure to go out one portion (200 encoder ticks, a class constant)
+     * <p>
+     *     Typically used during tele-op mode (as a command to extend the tape measure)
+     * </p>
+     *
+     * @param robot pass the robot (type HardwareBruinBot) and tape will go out one portion
+     *
+     */
     public static void goOutOnePortion (HardwareBruinBot robot) {
 
         int currentPosition = robot.tapeMotor.getCurrentPosition();
@@ -46,6 +83,17 @@ public class GregTapeMeasure {
         goToPosition(robot, desiredPosition);
 
     }
+
+    /**
+     *
+     * Will cause the tape measure to go in one portion (200 encoder ticks, a class constant)
+     * <p>
+     *     Typically used during tele-op mode (as a command to retract the tape measure)
+     * </p>
+     *
+     * @param robot pass the robot (type HardwareBruinBot) and tape will go in one portion
+     *
+     */
 
     public static void goInOnePortion (HardwareBruinBot robot) {
 

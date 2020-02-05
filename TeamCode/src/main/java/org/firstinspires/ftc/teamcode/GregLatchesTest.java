@@ -63,17 +63,21 @@ public class GregLatchesTest extends LinearOpMode {
         // Best way:  put the method in another file, grouped around different capabilities or
         // sensors or movements or motors or whatever.  Then when you want to change it you make
         // a single change there and it will be changed in all places
-        GregLatches.move(robot, 1); // 1 = down and 0 = up
+        //GregLatches.move(robot, 1); // 1 = down and 0 = up
+        GregLatches.move(robot, telemetry, 1);
+        telemetry.update();
         sleep(5000);
         stopBot();
 
         // now reset the Latches to .5 again (strange position to know we have succeeded)
-        GregLatches.move(robot, .5);
+        GregLatches.move(robot, telemetry, 5);
+        telemetry.update();
         sleep(5000);
         stop();
 
         // now reset
-        GregLatches.move(robot, 1);
+        GregLatches.move(robot, telemetry,1);
+        telemetry.update();
         //GregLatches.move(robot, .8);
 
         //GregLatches.move(robot, 1);
