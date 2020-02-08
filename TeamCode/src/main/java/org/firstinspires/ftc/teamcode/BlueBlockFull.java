@@ -174,9 +174,7 @@ public class BlueBlockFull extends LinearOpMode {
         stopBot();
 
 
-        robot.tapeMotor.setTargetPosition(-1400);
-        robot.tapeMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.tapeMotor.setPower(1);
+        TapeMeasure.goToPosition(robot, -1400);
         sleep(5000);
         stopBot();
 

@@ -408,13 +408,11 @@ public class SkystoneTeleOp extends LinearOpMode {
                 platformServoDown = gamepad2.x;
                 platformServoUp = gamepad2.b;
                 if (platformServoDown) {
-                    robot.rightPlatformServo.setPosition(1);
-                    robot.leftPlatformServo.setPosition(1);
+                    Latches.move(robot, 1);
                 }
                 else {
                     if (platformServoUp) {
-                        robot.rightPlatformServo.setPosition(.5);
-                        robot.leftPlatformServo.setPosition(.5);
+                        Latches.move(robot, 0);
                     }
                 }
 

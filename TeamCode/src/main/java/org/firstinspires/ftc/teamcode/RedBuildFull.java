@@ -70,8 +70,7 @@ public class RedBuildFull extends LinearOpMode {
 
 
         //put them into a known position
-        robot.rightPlatformServo.setPosition(.1);
-        robot.leftPlatformServo.setPosition(.1);
+        Latches.move(robot, .5);
 
 
         sleep(7000);
@@ -97,8 +96,7 @@ public class RedBuildFull extends LinearOpMode {
      stopBot();
 
 //        Clamp latches
-        robot.rightPlatformServo.setPosition(1);
-        robot.leftPlatformServo.setPosition(1);
+        Latches.move(robot, 1);
         sleep(1000);
 
 //        Move back until the back touch sensor is pressed
@@ -106,8 +104,7 @@ public class RedBuildFull extends LinearOpMode {
         stopBot();
 
 //        Release latches
-        robot.rightPlatformServo.setPosition(0);
-        robot.leftPlatformServo.setPosition(0);
+        Latches.move(robot, .5);
         sleep(2000);
 
 //        close claw
@@ -132,9 +129,7 @@ public class RedBuildFull extends LinearOpMode {
         stopBot();
 
 
-        robot.tapeMotor.setTargetPosition(-1400);
-        robot.tapeMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.tapeMotor.setPower(1);
+        TapeMeasure.goToPosition(robot, -1400);
         sleep(5000);
         stopBot();
 

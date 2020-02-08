@@ -4,7 +4,7 @@ public class Latches {
 
 
     /**
-     * @param position for positions: 1 is down (clameped) and .5 is up (to the side)
+     * @param position for positions: 1 is down (clamped) and .5 is up (to the side)
      */
 
     public static void move(HardwareBruinBot robot, double position) {
