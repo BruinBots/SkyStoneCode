@@ -57,6 +57,7 @@ public class RedBlockFull extends LinearOpMode {
         //reset the encoder
         robot.armLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.tapeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.armExtendMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         // Wait for the Start button to be pushed
         while (!isStarted()) {
             // Put things to do prior to start in here
@@ -121,10 +122,16 @@ public class RedBlockFull extends LinearOpMode {
 
 
 
-        //strafe left
-
-        gyroHoldStrafe(0,0,-1, 9);
+        //strafe right
+        //TODO change to gyro
+        while (sonarDistance()>=16) {
+            //find gyrostrafe
+            moveBot(0,0,-1, .3);
+        }
         stopBot();
+
+
+
 
         //drive to platform
 
@@ -159,15 +166,11 @@ public class RedBlockFull extends LinearOpMode {
 
 
 
-        moveBot(-1,0,0,.2);
-        sleep(400);
-        stopBot();
-
 
         gyroSpin(-90);
         stopBot();
 
-        while (robot.backDistance.getDistance(DistanceUnit.INCH) < 24) {
+        while (robot.backDistance.getDistance(DistanceUnit.INCH) < 36) {
             moveBot(-1,0,0, .2);
         }
         stopBot();

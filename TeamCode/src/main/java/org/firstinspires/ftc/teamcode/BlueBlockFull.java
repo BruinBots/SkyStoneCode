@@ -56,6 +56,7 @@ public class BlueBlockFull extends LinearOpMode {
         //reset the encoder
         robot.armLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.tapeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.armExtendMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         // Wait for the Start button to be pushed
         while (!isStarted()) {
             // Put things to do prior to start in here
@@ -94,7 +95,7 @@ public class BlueBlockFull extends LinearOpMode {
 
         //move forward
 
-        moveBot(-1,0,0,.2);
+        moveBot(-1,0,0,.3);
         sleep(2000);
         stopBot();
 
@@ -111,7 +112,7 @@ public class BlueBlockFull extends LinearOpMode {
 
         //back up
 
-        moveBot(1,0,0,.2);
+        moveBot(1,0,0,.3);
         sleep(100);
         stopBot();
 
@@ -123,13 +124,17 @@ public class BlueBlockFull extends LinearOpMode {
 
         //strafe left
 
-        gyroHoldStrafe(0,0,1,10);
+        while (rangeSensor()>=16) {
+            //find gyrostrafe
+            moveBot(0,0,1,.3);
+        }
         stopBot();
+
 
         //drive to platform
 
         while (robot.frontTouchSensor.getState()) {
-            moveBot(-1, 0, 0, .2); // 1 drives backwards, -1 drives forward
+            moveBot(-1, 0, 0, .3); // 1 drives backwards, -1 drives forward
         }
         stopBot();
 
@@ -148,7 +153,7 @@ public class BlueBlockFull extends LinearOpMode {
 //        sleep(1500);
 //        robot.armExtendMotor.setPower(0);
 
-        moveBot(1,0,0,.2); // 1 drives backwards, -1 drives forwards
+        moveBot(1,0,0,.3); // 1 drives backwards, -1 drives forwards
         sleep(900);
         stopBot();
 
@@ -159,17 +164,11 @@ public class BlueBlockFull extends LinearOpMode {
 
 
 
-
-        moveBot(-1,0,0,.2);
-        sleep(400);
-        stopBot();
-
-
         gyroSpin(90);
         stopBot();
 
-        while (robot.backDistance.getDistance(DistanceUnit.INCH) < 24) {
-            moveBot(-1,0,0, .2);
+        while (robot.backDistance.getDistance(DistanceUnit.INCH) < 36) {
+            moveBot(-1,0,0, .3);
         }
         stopBot();
 

@@ -106,7 +106,7 @@ public class SkystoneTeleOpWithoutReset extends LinearOpMode {
         int currentArmExtendPosition = 0;
 //        int MAX_TAPEMEASURE_POSITION = 0;
 //        int MIN_TAPEMEASURE_POSITION = -1600;
-//        int currentTapeMeasurePosition = 0;
+//        int curren tTapeMeasurePosition = 0;
 
 
 
@@ -130,8 +130,15 @@ public class SkystoneTeleOpWithoutReset extends LinearOpMode {
         telemetry.addData("Say", "Hello Driver");    //
         telemetry.update();
 
+
+
+
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
+
+
+        TapeMeasure.goToPosition(robot, 0);
+
 
             // run until the end of the match (driver presses STOP)
             while (opModeIsActive()) {

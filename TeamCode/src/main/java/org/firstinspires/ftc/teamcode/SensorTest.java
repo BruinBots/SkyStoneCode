@@ -81,6 +81,7 @@ public class SensorTest extends LinearOpMode {
             telemetry.addData("Range Sensor (in): ", rangeSensor());
             telemetry.addData("Color Sensor Red: ", robot.colorSensor.red());
             telemetry.addData("Color Sensor Blue: ", robot.colorSensor.blue());
+            telemetry.addData("Laser Sensor", robot.backDistance.getDistance(DistanceUnit.INCH));
             telemetry.update();
             if (isStopRequested()) {
                 stop();
@@ -88,6 +89,8 @@ public class SensorTest extends LinearOpMode {
             }
         }
     }
+
+
     public double getHeading()
     {
         // Get the current heading.

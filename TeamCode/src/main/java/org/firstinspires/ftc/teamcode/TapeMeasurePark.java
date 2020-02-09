@@ -19,8 +19,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
             robot.init(hardwareMap);
 
             //reset the encoder
-
+            robot.armLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.tapeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.armExtendMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             // Wait for the Start button to be pushed
             while (!isStarted()) {
                 // Put things to do prior to start in here
