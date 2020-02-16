@@ -502,7 +502,7 @@ public void moveBot(double drive, double rotate, double strafe, double scaleFact
         // keep looping while we have time remaining.
 
 //        while (robot.backTouchSensor.getState()) {
-        while (robot.backDistance.getDistance(DistanceUnit.CM)> 3) {
+        while (robot.backDistance.getDistance(DistanceUnit.CM)> 6) {
             telemetry.addData("say", "gyrohold for the touch sensor");
             telemetry.update();
             // Update telemetry & Allow time for other processes to run.

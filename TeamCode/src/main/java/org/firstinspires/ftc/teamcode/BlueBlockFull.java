@@ -95,7 +95,7 @@ public class BlueBlockFull extends LinearOpMode {
 
         //move forward
 
-        moveBot(-1,0,0,.3);
+        moveBot(-1,0,0,.2);
         sleep(2000);
         stopBot();
 
@@ -167,10 +167,39 @@ public class BlueBlockFull extends LinearOpMode {
         gyroSpin(90);
         stopBot();
 
-        while (robot.backDistance.getDistance(DistanceUnit.INCH) < 36) {
-            moveBot(-1,0,0, .3);
-        }
-        stopBot();
+
+
+        Safe.forwardsAwayFromWall(robot, telemetry, 26, 24, 36, 90);
+
+//        while (robot.backDistance.getDistance(DistanceUnit.INCH) < 36) {
+//            moveBot(-1,0,0, .3);
+//        }
+//        stopBot();
+
+
+//        //new approach
+////        Keepmoving = true
+//        boolean keepMoving = true;
+//        int maxEncoderPosition = 300;
+//        int minEncoderPosition = 100;
+//        int laserSensorGoal = 6;
+//        robot.leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//
+//        moveBot(1, 0, 0, .3);
+//
+//        while (keepMoving) {
+//            if (robot.leftFrontDrive.getCurrentPosition() > maxEncoderPosition) {
+//                stopBot();
+//                keepMoving = false;
+//            }
+//            if ((robot.backDistance.getDistance(DistanceUnit.INCH) < laserSensorGoal) &&
+//                    robot.leftFrontDrive.getCurrentPosition() > minEncoderPosition) {
+//                stopBot();
+//                keepMoving = false;
+//            }
+//        }
+
+
 
 
         TapeMeasure.goToPosition(robot, -1400);
@@ -457,6 +486,7 @@ public void moveBot(double drive, double rotate, double strafe, double scaleFact
         average = average + robot.sonarSensor.getVoltage();
         return (average*75);
     }
+
 
 
     public double rangeSensor (){

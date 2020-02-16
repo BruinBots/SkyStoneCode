@@ -126,7 +126,8 @@ public class RedBlockFull extends LinearOpMode {
         //TODO change to gyro
         while (sonarDistance()>=16) {
             //find gyrostrafe
-            moveBot(0,0,-1, .3);
+//            moveBot(0,0,-1, .3);
+            gyroStrafe(-.3, 0);
         }
         stopBot();
 
@@ -170,9 +171,13 @@ public class RedBlockFull extends LinearOpMode {
         gyroSpin(-90);
         stopBot();
 
-        while (robot.backDistance.getDistance(DistanceUnit.INCH) < 36) {
-            moveBot(-1,0,0, .2);
-        }
+//        while (robot.backDistance.getDistance(DistanceUnit.INCH) < 36) {
+//            moveBot(-1,0,0, .2);
+//        }
+
+
+
+        Safe.forwardsAwayFromWall(robot, telemetry, 26, 24, 36, -90);
         stopBot();
 
 
@@ -591,25 +596,21 @@ public void moveBot(double drive, double rotate, double strafe, double scaleFact
      * @param angle      Absolute Angle (in Degrees) relative to last gyro reset.
      *                   0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
      *                   If a relative angle is required, add/subtract from current heading.
-     * @param holdTime   Length of time (in seconds) to hold the specified heading.
      */
 
 
-    //holdtime is in seconds
-    public void gyroHoldStrafe( double speed, double angle, double strafe, double holdTime) {
-        // This function drives on a specified heading for a given time
-        // Time is in seconds!!!!!
+
+    public void gyroHoldStrafe( double speed, double angle, double strafe) {
+        // This function drives on a specified heading
         ElapsedTime holdTimer = new ElapsedTime();
         double error;
         double PCoeff = 0.1;
         // keep looping while we have time remaining.
         holdTimer.reset();
-        while ((!isStopRequested() && holdTimer.time() < holdTime)) {
-            // Update telemetry & Allow time for other processes to run.
-            //error = Range.clip(getError(angle),-0.3,0.3);
-            error = PCoeff * getError(angle);
-            moveBot(speed, error, strafe, 0.3);
-        }
+        // Update telemetry & Allow time for other processes to run.
+        //error = Range.clip(getError(angle),-0.3,0.3);
+        error = PCoeff * getError(angle);
+        moveBot(speed, error, strafe, 0.3);
 
         //stop all motion
         stopBot();

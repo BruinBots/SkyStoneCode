@@ -11,7 +11,8 @@ public class TapeMeasure {
     final static int MAX_TAPEMEASURE_POSITION = 0;
     final static int MIN_TAPEMEASURE_POSITION = -1600;
     final static int OVERDRIVE_VALUE = 8;
-    final static double POWER = 1.0;
+    final static double IN_POWER = .9;
+    final static double OUT_POWER = .7;
     final static int OUT_PORTION = 200;
     final static int IN_PORTION = 200;
 
@@ -31,7 +32,12 @@ public class TapeMeasure {
         if (abs(desiredPosition - currentPosition) >= OVERDRIVE_VALUE) {
             robot.tapeMotor.setTargetPosition(desiredPosition);
             robot.tapeMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.tapeMotor.setPower(POWER);
+            if (desiredPosition < currentPosition) {
+                robot.tapeMotor.setPower(OUT_POWER);
+            }
+            else if (desiredPosition >= currentPosition) {
+                robot.tapeMotor.setPower(IN_POWER);
+            }
         }
 
         // would be nice to figure out how to use telemetry here

@@ -4,10 +4,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 
-
-    @Autonomous(name = "TapeMeasurePark", group = "Alex")
+@Autonomous(name = "TapeMeasurePark", group = "Alex")
 
     public class TapeMeasurePark extends LinearOpMode {
 
@@ -54,28 +54,74 @@ import com.qualcomm.robotcore.hardware.DcMotor;
                 //
                // GregTapeMeasure.goToPosition(robot, -800);
 
+
+
+
             sleep(23000);
 
                 TapeMeasure.goToPosition(robot, -1250);
-                //GregLatches.move(robot, 1); // 1 = down and 0 = up
+//                //GregLatches.move(robot, 1); // 1 = down and 0 = up
                 sleep(5000);
-                stopBot();
+//                stopBot();
 
-           // TapeMeasure.goToPosition(robot, 0);
-            //GregLatches.move(robot, 1); // 1 = down and 0 = up
-           // sleep(5000);
-            //stopBot();
+            TapeMeasure.goToPosition(robot, 0);
+//            GregLatches.move(robot, 1); // 1 = down and 0 = up
+            sleep(5000);
+            stopBot();
             }
 
+    public void moveBot(double drive, double rotate, double strafe, double scaleFactor)
+    {
+        // This module takes inputs, normalizes them to DRIVE_SPEED, and drives the motors
+//        robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-            public void stopBot ()
+        // How to normalize...Version 3
+        //Put the raw wheel speeds into an array
+        double wheelSpeeds[] = new double[4];
+        wheelSpeeds[0] = drive + strafe - rotate;
+        wheelSpeeds[1] = drive - strafe - rotate;
+        wheelSpeeds[2] = drive - strafe + rotate;
+        wheelSpeeds[3] = drive + strafe + rotate;
+        // Find the magnitude of the first element in the array
+        double maxMagnitude = Math.abs(wheelSpeeds[0]);
+        // If any of the other wheel speeds are bigger, save that value in maxMagnitude
+        for (int i = 1; i < wheelSpeeds.length; i++)
+        {
+            double magnitude = Math.abs(wheelSpeeds[i]);
+            if (magnitude > maxMagnitude)
             {
-                // This function stops the robot
-                robot.leftFrontDrive.setPower(0);
-                robot.leftRearDrive.setPower(0);
-                robot.rightFrontDrive.setPower(0);
-                robot.rightRearDrive.setPower(0);
+                maxMagnitude = magnitude;
             }
+        }
+        // Normalize all of the magnitudes to below 1
+        if (maxMagnitude > 1.0)
+        {
+            for (int i = 0; i < wheelSpeeds.length; i++)
+            {
+                wheelSpeeds[i] /= maxMagnitude;
+            }
+        }
+        // Send the normalized values to the wheels, further scaled by the user
+        robot.leftFrontDrive.setPower(scaleFactor * wheelSpeeds[0]);
+        robot.leftRearDrive.setPower(scaleFactor * wheelSpeeds[1]);
+        robot.rightFrontDrive.setPower(scaleFactor * wheelSpeeds[2]);
+        robot.rightRearDrive.setPower(scaleFactor * wheelSpeeds[3]);
+
+
+
+
+
+    }
+    public void stopBot()
+    {
+        // This function stops the robot
+        robot.leftFrontDrive.setPower(0);
+        robot.leftRearDrive.setPower(0);
+        robot.rightFrontDrive.setPower(0);
+        robot.rightRearDrive.setPower(0);
+    }
+
+
 
 
 

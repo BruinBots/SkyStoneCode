@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -56,6 +57,7 @@ public class SensorTest extends LinearOpMode {
         }
 
 
+
         // Wait for the Start button to be pushed ----------------------------START----------------------------------------------
         while (!isStarted()) {
             // Put things to do prior to start in here
@@ -66,6 +68,7 @@ public class SensorTest extends LinearOpMode {
             telemetry.addData("Range Sensor (in): ", rangeSensor());
             telemetry.addData("Color Sensor Red: ", robot.colorSensor.red());
             telemetry.addData("Color Sensor Blue: ", robot.colorSensor.blue());
+            robot.leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             telemetry.update();
             if (isStopRequested()) {
                 stop();
@@ -81,7 +84,8 @@ public class SensorTest extends LinearOpMode {
             telemetry.addData("Range Sensor (in): ", rangeSensor());
             telemetry.addData("Color Sensor Red: ", robot.colorSensor.red());
             telemetry.addData("Color Sensor Blue: ", robot.colorSensor.blue());
-            telemetry.addData("Laser Sensor", robot.backDistance.getDistance(DistanceUnit.INCH));
+            telemetry.addData("Laser Sensor (centimeters)", robot.backDistance.getDistance(DistanceUnit.CM));
+            telemetry.addData("Left front wheel encoder value", robot.leftFrontDrive.getCurrentPosition());
             telemetry.update();
             if (isStopRequested()) {
                 stop();

@@ -276,7 +276,7 @@ public class SkystoneTeleOpWithoutReset extends LinearOpMode {
                 }
                 else {
                     if (platformServoUp) {
-                        Latches.move(robot, 0);
+                        Latches.move(robot, .5);
                     }
                 }
 
