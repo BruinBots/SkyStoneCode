@@ -133,7 +133,7 @@ public class RedBlockFull extends LinearOpMode {
 
 
 
-        while (robot.leftFrontDrive.getCurrentPosition() >= -3600) {
+        while (robot.leftFrontDrive.getCurrentPosition() >= -2800) {
             //find gyrostrafe
 //            moveBot(0,0,1,.3);
             gyroStrafe(-.3, 0);
@@ -141,7 +141,7 @@ public class RedBlockFull extends LinearOpMode {
             telemetry.update();
         }
 
-        while ((rangeSensor()>= 16) || robot.leftFrontDrive.getCurrentPosition() >= -3800) {
+        while ((sonarDistance()>= 16) || robot.leftFrontDrive.getCurrentPosition() >= -3000) {
             gyroStrafe(-.3, 0);
             telemetry.addData("Encoder:", robot.leftFrontDrive.getCurrentPosition());
             telemetry.update();
