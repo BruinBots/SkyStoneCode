@@ -72,6 +72,47 @@ public class Safe  {
 
 
 
+//    public static void strafeRightTowardsWall(HardwareBruinBot robot, Telemetry _telemetry, double maxInchFromWall, double minInchFromWall, double SonarSensorGoal, double direction) {
+//
+//        //negative because forwards is negative and backwards is positive for some reason
+//        double maxTickFromWall = -(inchToTick(maxInchFromWall));
+//        double minTicksFromWall = -(inchToTick(minInchFromWall));
+//        boolean keepMoving = true;
+//        Telemetry telemetry = _telemetry;
+//
+//
+//        robot.leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//
+//
+//
+//        gyroHoldStrafe(robot, -0.6, direction, 1);
+//
+//        while (keepMoving) {
+//            if (robot.leftFrontDrive.getCurrentPosition() < maxTickFromWall) {
+//                stopBot(robot);
+//                keepMoving = false;
+//                telemetry.addData("emergency stop", "");
+//            }
+//            if ((sonarDistance(robot)) > SonarSensorGoal) &&
+//                    (sonarDistance(robot)) < (SonarSensorGoal * 2)) &&
+//                    robot.leftFrontDrive.getCurrentPosition() < minTicksFromWall) {
+//                stopBot(robot);
+//                keepMoving = false;
+//                telemetry.addData("normal stop", "");
+//            }
+//
+//        }
+//        telemetry.addData("maxTickFromWall: ", maxTickFromWall);
+//        telemetry.addData("minTickFromWall: ", minTicksFromWall);
+//        telemetry.addData("SonarSensor: ", sonarDistance(robot));
+//        telemetry.addData("encoder position: ", robot.leftFrontDrive.getCurrentPosition());
+//        telemetry.update();
+//
+//    }
+
+
+
+
 
 
     public static void backwardsTowardWall (HardwareBruinBot robot, Telemetry _telemetry, double maxInchFromWall, double minInchFromWall, double laserSensorGoal) {
@@ -176,6 +217,7 @@ public class Safe  {
             return robotError;
         }
 
+
     public static double getHeading(HardwareBruinBot robot)
     {
         // Get the current heading.
@@ -192,6 +234,58 @@ public class Safe  {
         return heading;
 
     }
+
+    public static void gyroHoldStrafe(HardwareBruinBot robot, double speed, double angle, double strafe) {
+        // This function drives on a specified heading
+        double error;
+        double PCoeff = 0.1;
+        // Update telemetry & Allow time for other processes to run.
+        //error = Range.clip(getError(angle),-0.3,0.3);
+        error = PCoeff * getError(robot, angle);
+        moveBot(robot, speed, error, strafe, 0.3);
+
+        //stop all motion
+        stopBot(robot);
+    }
+
+
+    public static double sonarDistance (HardwareBruinBot robot){
+        // Returns distance from the sonar sensor over an average of 4 values
+        // Trying to get around noise in the sensor
+        // 75 is the scaling factor between voltage and distance in INCHES
+        // based on data collected on 11/17/2018
+        double average;
+        average = robot.sonarSensor.getVoltage();
+        try
+        {
+            Thread.sleep(1);
+        }
+        catch(InterruptedException ex)
+        {
+            Thread.currentThread().interrupt();
+        }
+        average = average + robot.sonarSensor.getVoltage();
+        try
+        {
+            Thread.sleep(1);
+        }
+        catch(InterruptedException ex)
+        {
+            Thread.currentThread().interrupt();
+        }
+        average = average + robot.sonarSensor.getVoltage();
+        try
+        {
+            Thread.sleep(1);
+        }
+        catch(InterruptedException ex)
+        {
+            Thread.currentThread().interrupt();
+        }
+        average = average + robot.sonarSensor.getVoltage();
+        return (average*75);
+    }
+
 
         public static void gyroHold(HardwareBruinBot robot, double speed, double angle) {
             // This function drives on a specified heading for a given time

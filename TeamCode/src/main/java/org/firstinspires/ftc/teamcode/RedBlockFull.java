@@ -58,6 +58,10 @@ public class RedBlockFull extends LinearOpMode {
         robot.armLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.tapeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.armExtendMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        robot.leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        robot.rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        robot.leftRearDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        robot.rightRearDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         // Wait for the Start button to be pushed
         while (!isStarted()) {
             // Put things to do prior to start in here
@@ -112,6 +116,10 @@ public class RedBlockFull extends LinearOpMode {
 
         //back up
 
+
+        robot.leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         moveBot(1,0,0,.2);
         sleep(500);
         stopBot();
@@ -122,12 +130,21 @@ public class RedBlockFull extends LinearOpMode {
 
 
 
-        //strafe right
-        //TODO change to gyro
-        while (sonarDistance()>=16) {
+
+
+
+        while (robot.leftFrontDrive.getCurrentPosition() >= -3600) {
             //find gyrostrafe
-//            moveBot(0,0,-1, .3);
+//            moveBot(0,0,1,.3);
             gyroStrafe(-.3, 0);
+            telemetry.addData("Encoder:", robot.leftFrontDrive.getCurrentPosition());
+            telemetry.update();
+        }
+
+        while ((rangeSensor()>= 16) || robot.leftFrontDrive.getCurrentPosition() >= -3800) {
+            gyroStrafe(-.3, 0);
+            telemetry.addData("Encoder:", robot.leftFrontDrive.getCurrentPosition());
+            telemetry.update();
         }
         stopBot();
 
@@ -166,7 +183,8 @@ public class RedBlockFull extends LinearOpMode {
 
 
 
-
+        TapeMeasure.goToPosition(robot, -1400);
+        stopBot();
 
         gyroSpin(-90);
         stopBot();
@@ -177,14 +195,14 @@ public class RedBlockFull extends LinearOpMode {
 
 
 
-        Safe.forwardsAwayFromWall(robot, telemetry, 26, 24, 36, -90);
+
+
+        Safe.forwardsAwayFromWall(robot, telemetry, 36, 38, 48, -90);
         stopBot();
 
 
 
-        TapeMeasure.goToPosition(robot, -1400);
-        sleep(5000);
-        stopBot();
+
 
 
         //hoping to move the robot 2 seconds forwards

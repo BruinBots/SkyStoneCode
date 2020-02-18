@@ -57,6 +57,10 @@ public class BlueBlockFull extends LinearOpMode {
         robot.armLiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.tapeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.armExtendMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        robot.leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        robot.rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        robot.leftRearDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        robot.rightRearDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         // Wait for the Start button to be pushed
         while (!isStarted()) {
             // Put things to do prior to start in here
@@ -66,6 +70,12 @@ public class BlueBlockFull extends LinearOpMode {
         double strafe = 0.5;  // Strafe Speed
         int currentArmExtendOut = -250;
         int currentArmExtendIn = -50;
+
+
+        double wheelDiameter = 4;
+        double wheelCircumference = Math.PI * wheelDiameter;
+        double ticksPerRotation = 360;
+        double ticksPerInch = ticksPerRotation / wheelCircumference;
 
         //put them into a known position
         robot.rightPlatformServo.setPosition(.1);
@@ -112,6 +122,9 @@ public class BlueBlockFull extends LinearOpMode {
 
         //back up
 
+        robot.leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         moveBot(1,0,0,.3);
         sleep(100);
         stopBot();
@@ -124,9 +137,14 @@ public class BlueBlockFull extends LinearOpMode {
 
         //strafe left
 
-        while (rangeSensor()>=16) {
+        while (robot.leftFrontDrive.getCurrentPosition() <= 3600) {
             //find gyrostrafe
-            moveBot(0,0,1,.3);
+//            moveBot(0,0,1,.3);
+            gyroStrafe(.3, 0);
+        }
+
+        while (rangeSensor()>= 16) {
+            gyroStrafe(.3, 0);
         }
         stopBot();
 
@@ -162,6 +180,8 @@ public class BlueBlockFull extends LinearOpMode {
         //park on line
 
 
+        TapeMeasure.goToPosition(robot, -1400);
+        stopBot();
 
 
         gyroSpin(90);
@@ -169,7 +189,7 @@ public class BlueBlockFull extends LinearOpMode {
 
 
 
-        Safe.forwardsAwayFromWall(robot, telemetry, 26, 24, 36, 90);
+        Safe.forwardsAwayFromWall(robot, telemetry, 38, 36, 48, 90);
 
 //        while (robot.backDistance.getDistance(DistanceUnit.INCH) < 36) {
 //            moveBot(-1,0,0, .3);
@@ -202,9 +222,7 @@ public class BlueBlockFull extends LinearOpMode {
 
 
 
-        TapeMeasure.goToPosition(robot, -1400);
-        sleep(5000);
-        stopBot();
+
 
 
 //        robot.armLiftMotor.setTargetPosition(-30);
@@ -508,6 +526,14 @@ public void moveBot(double drive, double rotate, double strafe, double scaleFact
 
         return average;
     }
+
+
+
+//    private double inchToTick(double inches){
+//        double ticks;
+//        ticks = inches * ticksPerInch;
+//        return ticks;
+//    }
 
 
     public void gyroStrafe ( double speed, double heading) {

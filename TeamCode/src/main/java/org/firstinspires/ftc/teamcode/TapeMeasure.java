@@ -9,7 +9,7 @@ public class TapeMeasure {
 
 
     final static int MAX_TAPEMEASURE_POSITION = 0;
-    final static int MIN_TAPEMEASURE_POSITION = -1600;
+    final static int MIN_TAPEMEASURE_POSITION = -1200;
     final static int OVERDRIVE_VALUE = 8;
     final static double IN_POWER = .9;
     final static double OUT_POWER = .7;
