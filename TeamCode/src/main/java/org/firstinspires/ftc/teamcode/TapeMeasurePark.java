@@ -61,12 +61,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
                 TapeMeasure.goToPosition(robot, -1250);
 //                //GregLatches.move(robot, 1); // 1 = down and 0 = up
-//                sleep(5000);
+                sleep(5000);
 //                stopBot();
 
 //            TapeMeasure.goToPosition(robot, 0);
 ////            GregLatches.move(robot, 1); // 1 = down and 0 = up
-//            sleep(5000);
+            sleep(5000);
 //            stopBot();
             }
 
